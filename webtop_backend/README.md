@@ -1,2 +1,2 @@
 # webtop
-My custom desktop layout made using web technologies.
+Personal desktop monitoring system.

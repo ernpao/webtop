@@ -1,7 +1,7 @@
 {
   "name": "webtop",
   "version": "1.0.0",
-  "description": "My custom desktop layout made using web technologies.",
+  "description": "Personal desktop monitoring system.",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
