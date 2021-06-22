@@ -19,8 +19,11 @@
   "homepage": "https://github.com/ernpao/webtop#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "request": "^2.88.2",
+    "robotjs": "^0.6.0",
+    "tesseract.js": "^2.1.4"
   }
 }
