@@ -1,2 +1,2 @@
 # webtop
-Personal desktop monitoring system.
+Personal automation tools for desktop.
