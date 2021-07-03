@@ -1,0 +1,3 @@
+[submodule "flutter-with-serverless"]
+	path = flutter-with-serverless
+	url = git@github.com:ernpao/flutter-with-serverless.git

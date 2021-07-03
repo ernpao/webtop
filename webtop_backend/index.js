@@ -8,8 +8,7 @@ const robotjs = require('robotjs')
 const Tesseract = require('tesseract.js')
 
 const app = express()
-
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(express.static(__dirname + '/'));
 
 app.get('/', function (req, res) {
@@ -17,10 +16,10 @@ app.get('/', function (req, res) {
     console.log(mouse)
     res.json({
         'success': 'true',
-        'message': 'hello'
+        'message': 'Webtop Backend Server'
     })
 })
- 
+
 app.post('/ocr', (req, res) => {
 
     // Image url provided by user for OCR
