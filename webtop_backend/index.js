@@ -71,8 +71,29 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: process.env.WEBSOCKET_PORT })
 wss.on('connection', (connection) => {
     console.log("Connection established");
-    connection.send('Connected to Webtop socket!');    
-    connection.on('message', function incoming(message) {
-        console.log('received: %s', message);
+
+    connection.on('message', (message) => {
+        dataFromClient = JSON.parse(message)
+        const { websocket_message_type, websocket_message_topic } = dataFromClient
+        console.log('Received: %s', dataFromClient);
+
+        switch (websocket_message_type) {
+
+            default:
+                break;
+        }
+
+        switch (websocket_message_topic) {
+
+            default:
+                break;
+        }
+
+        // connection.send(JSON.stringify({
+        //     "success": true,
+        //     "data": dataFromClient
+        // }))
     });
+
+    connection.on('close', () => console.log("Connection closed"));
 });
