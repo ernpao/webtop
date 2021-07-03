@@ -1,12 +1,12 @@
 require('dotenv').config()
 const fs = require('fs')
-const express = require('express')
-const bodyParser = require('body-parser')
 const request = require('request')
 
 const robotjs = require('robotjs')
 const Tesseract = require('tesseract.js')
 
+// Setup Express app
+const express = require('express')
 const app = express()
 app.use(express.json())
 app.use(express.static(__dirname + '/'));
@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
     var mouse = robotjs.getMousePos();
     console.log(mouse)
     res.json({
-        'success': 'true',
+        'success': true,
         'message': 'Webtop Backend Server'
     })
 })
@@ -65,3 +65,14 @@ app.post('/ocr', (req, res) => {
 })
 
 app.listen(process.env.PORT)
+
+// Setup Websockets
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: process.env.WEBSOCKET_PORT })
+wss.on('connection', (connection) => {
+    console.log("Connection established");
+    connection.send('Connected to Webtop socket!');    
+    connection.on('message', function incoming(message) {
+        console.log('received: %s', message);
+    });
+});
