@@ -69,31 +69,42 @@ app.listen(process.env.PORT)
 // Setup Websockets
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: process.env.WEBSOCKET_PORT })
-wss.on('connection', (connection) => {
+wss.on('connection', (socket) => {
     console.log("Connection established");
 
-    connection.on('message', (message) => {
-        dataFromClient = JSON.parse(message)
-        const { websocket_message_type, websocket_message_topic } = dataFromClient
-        console.log('Received: %s', dataFromClient);
+    const sendMessageToClient = (type, topic, data) =>
+        socket.send(JSON.stringify({
+            "websocket_message_type": type,
+            "websocket_message_topic": topic,
+            "websocket_message_data": data
+        }))
 
-        switch (websocket_message_type) {
+
+    const sendPingResponse = () => sendMessageToClient("ping_response");
+
+    /**
+     * When client sends a message.
+     */
+    socket.on('message', (message) => {        
+
+        const messageFromClient = JSON.parse(message)
+        const type = messageFromClient.websocket_message_type;
+        const topic = messageFromClient.websocket_message_topic;
+        const data = messageFromClient.websocket_message_data;
+
+        switch (type) {
+            case "ping":
+                sendPingResponse();
+                break;
 
             default:
                 break;
         }
 
-        switch (websocket_message_topic) {
-
-            default:
-                break;
-        }
-
-        // connection.send(JSON.stringify({
-        //     "success": true,
-        //     "data": dataFromClient
-        // }))
     });
-
-    connection.on('close', () => console.log("Connection closed"));
+    
+    /**
+     * When client closes the connection.
+     */
+    socket.on('close', () => console.log("Connection closed"));
 });
