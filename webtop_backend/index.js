@@ -85,9 +85,14 @@ wss.on('connection', (socket) => {
     /**
      * When client sends a message.
      */
-    socket.on('message', (message) => {        
+    socket.on('message', (message) => {
+        var messageFromClient = message
 
-        const messageFromClient = JSON.parse(message)
+        if (typeof message === 'string' || message instanceof String) {
+            messageFromClient = JSON.parse(message);
+        }
+
+        console.log(messageFromClient);
         const type = messageFromClient.websocket_message_type;
         const topic = messageFromClient.websocket_message_topic;
         const data = messageFromClient.websocket_message_data;
@@ -97,12 +102,17 @@ wss.on('connection', (socket) => {
                 sendPingResponse();
                 break;
 
+            case "esp32_webtop_client":
+                console.log("Data received from ESP32 client:") 
+                console.log(data)
+                break;
+
             default:
                 break;
         }
 
     });
-    
+
     /**
      * When client closes the connection.
      */
