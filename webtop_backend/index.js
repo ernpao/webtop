@@ -74,9 +74,9 @@ wss.on('connection', (socket) => {
 
     const sendMessageToClient = (type, topic, data, client = socket) =>
         client.send(JSON.stringify({
-            "websocket_message_type": type,
-            "websocket_message_topic": topic,
-            "websocket_message_data": data
+            "_ws_type": type,
+            "_ws_topic": topic,
+            "_ws_data": data
         }));
 
 
@@ -100,13 +100,16 @@ wss.on('connection', (socket) => {
             messageFromClient = JSON.parse(message);
         }
 
-        const type = messageFromClient.websocket_message_type;
-        const topic = messageFromClient.websocket_message_topic;
-        const data = messageFromClient.websocket_message_data;
+        const type = messageFromClient._ws_type;
+        const topic = messageFromClient._ws_topic;
+        const data = messageFromClient._ws_data;
 
         switch (type) {
             case "ping":
                 sendPingResponse();
+                break;
+            case "bus":
+                broadcastToClients(type, topic, data);
                 break;
             case "esp32_webtop_client":
                 switch (topic) {
@@ -115,7 +118,7 @@ wss.on('connection', (socket) => {
                         console.log(data)
                         broadcastToClients(type, topic, data);
                         break;
-                    default: 
+                    default:
                         console.log("Data received from ESP32 client:")
                         console.log(data)
                         break;
