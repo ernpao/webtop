@@ -72,15 +72,23 @@ const wss = new WebSocket.Server({ port: process.env.WEBSOCKET_PORT })
 wss.on('connection', (socket) => {
     console.log("Connection established");
 
-    const sendMessageToClient = (type, topic, data) =>
-        socket.send(JSON.stringify({
+    const sendMessageToClient = (type, topic, data, client = socket) =>
+        client.send(JSON.stringify({
             "websocket_message_type": type,
             "websocket_message_topic": topic,
             "websocket_message_data": data
-        }))
+        }));
 
 
-    const sendPingResponse = () => sendMessageToClient("ping_response");
+    const sendPingResponse = (client = socket) => sendMessageToClient("ping_response", client);
+
+    const broadcastToClients = (type, topic, data) => {
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+                sendMessageToClient(type, topic, data, client)
+            }
+        });
+    }
 
     /**
      * When client sends a message.
@@ -92,7 +100,6 @@ wss.on('connection', (socket) => {
             messageFromClient = JSON.parse(message);
         }
 
-        console.log(messageFromClient);
         const type = messageFromClient.websocket_message_type;
         const topic = messageFromClient.websocket_message_topic;
         const data = messageFromClient.websocket_message_data;
@@ -101,13 +108,23 @@ wss.on('connection', (socket) => {
             case "ping":
                 sendPingResponse();
                 break;
-
             case "esp32_webtop_client":
-                console.log("Data received from ESP32 client:") 
-                console.log(data)
-                break;
+                switch (topic) {
+                    case "esp32_cam_capture":
+                        console.log("Camera data received from ESP32-CAM client:")
+                        console.log(data)
+                        broadcastToClients(type, topic, data);
+                        break;
+                    default: 
+                        console.log("Data received from ESP32 client:")
+                        console.log(data)
+                        break;
+                }
 
+                break;
             default:
+                console.log("Data received from Webtop client:")
+                console.log(messageFromClient);
                 break;
         }
 
@@ -116,5 +133,16 @@ wss.on('connection', (socket) => {
     /**
      * When client closes the connection.
      */
-    socket.on('close', () => console.log("Connection closed"));
+    socket.on('close', () => {
+        console.log("Connection closed");
+    });
+
+    /**
+     * When an error occurs with the client connection.
+     */
+    socket.on('error', (e) => {
+        console.log("Connection Error:");
+        console.log(e);
+    });
+
 });

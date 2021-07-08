@@ -10,10 +10,12 @@
 
 #include <WebSocketsClient.h>
 
-WiFiMulti WiFiMulti;
-WebSocketsClient webSocket;
 class WebtopClient
 {
+private:
+    WiFiMulti wiFiMulti;
+    WebSocketsClient webSocket;
+
 public:
     const char *host;
     const char *ssid;
@@ -44,8 +46,8 @@ public:
         println("Connecting to " + String(ssid) + "...");
         int attempts = 0;
         int maxAttempts = 20;
-        WiFiMulti.addAP(ssid, passphrase);
-        while (WiFiMulti.run() != WL_CONNECTED && attempts < maxAttempts)
+        wiFiMulti.addAP(ssid, passphrase);
+        while (wiFiMulti.run() != WL_CONNECTED && attempts < maxAttempts)
         {
             attempts++;
             println("Attempt " + String(attempts) + " of " + String(maxAttempts));
