@@ -4,6 +4,7 @@ WebtopClient webtop("192.168.100.191", 6767, 6868, "wNetworkSaBahay2.4GHz", "alo
 
 static auto loRes = esp32cam::Resolution::find(320, 240);
 static auto hiRes = esp32cam::Resolution::find(800, 600);
+static auto maxRes = esp32cam::Resolution::find(1600, 1200);
 
 void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 {
@@ -21,13 +22,13 @@ void setupCamera()
         Config cfg;
         cfg.setPins(pins::AiThinker);
         cfg.setResolution(hiRes);
-        cfg.setBufferCount(2);
-        cfg.setJpeg(80);
+        cfg.setBufferCount(2); // Default is 2
+        cfg.setJpeg(100); // Default is 80
 
         bool ok = Camera.begin(cfg);
         Serial.println(ok ? "CAMERA OK" : "CAMERA FAIL");
     }
-    esp32cam::Camera.changeResolution(loRes);
+    esp32cam::Camera.changeResolution(maxRes);
 }
 
 uint8_t *imageData;
