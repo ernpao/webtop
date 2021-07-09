@@ -90,12 +90,25 @@ wss.on('connection', (socket) => {
         });
     }
 
+    const broadcastBufferToClients = (buffer) => {
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+                if(client != socket) client.send(JSON.stringify(buffer));
+            }
+        });
+    }
+
     /**
      * When client sends a message.
      */
     socket.on('message', (message) => {
-        var messageFromClient = message
 
+        if (Buffer.isBuffer(message)) {
+            broadcastBufferToClients(message);            
+            return;
+        }
+
+        var messageFromClient = message
         if (typeof message === 'string' || message instanceof String) {
             messageFromClient = JSON.parse(message);
         }

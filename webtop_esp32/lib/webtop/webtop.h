@@ -78,6 +78,11 @@ public:
         webSocket.sendTXT("{\"websocket_message_type\":\"esp32_webtop_client\", \"websocket_message_data\": \"" + message + "\", \"websocket_message_topic\": \"" + topic + "\"}");
     }
 
+    void sendBinToSocket(uint8_t *payload, size_t length, bool headerToPayload = false)
+    {
+        webSocket.sendBIN(payload, length, headerToPayload);
+    }
+
     void socketLoop()
     {
         webSocket.loop();
