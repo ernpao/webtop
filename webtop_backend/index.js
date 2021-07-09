@@ -85,15 +85,7 @@ wss.on('connection', (socket) => {
     const broadcastToClients = (type, topic, data) => {
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
-                sendMessageToClient(type, topic, data, client)
-            }
-        });
-    }
-
-    const broadcastBufferToClients = (buffer) => {
-        wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN) {
-                if(client != socket) client.send(JSON.stringify(buffer));
+                if (client != socket) sendMessageToClient(type, topic, data, client)
             }
         });
     }
@@ -104,7 +96,14 @@ wss.on('connection', (socket) => {
     socket.on('message', (message) => {
 
         if (Buffer.isBuffer(message)) {
-            broadcastBufferToClients(message);            
+            var buffer = message;
+            wss.clients.forEach(function each(client) {
+                if (client.readyState === WebSocket.OPEN) {
+                    /// Don't send buffer to self!
+                    buffer.client = "test"
+                    if (client != socket) client.send(JSON.stringify(buffer));
+                }
+            });
             return;
         }
 
