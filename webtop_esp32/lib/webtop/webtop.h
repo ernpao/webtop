@@ -73,9 +73,9 @@ public:
         webSocket.setReconnectInterval(5000);
     }
 
-    void sendToSocket(String message, String topic = "none")
+    void sendToSocket(String body, String topic = "none")
     {
-        webSocket.sendTXT("{\"websocket_message_type\":\"esp32_webtop_client\", \"websocket_message_data\": \"" + message + "\", \"websocket_message_topic\": \"" + topic + "\"}");
+        webSocket.sendTXT("{\"_ws_type\":\"esp32\", \"_ws_data\": \"" + body + "\", \"_ws_topic\": \"" + topic + "\"}");
     }
 
     void sendBinToSocket(uint8_t *payload, size_t length, bool headerToPayload = false)
