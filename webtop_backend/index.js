@@ -100,20 +100,27 @@ wss.on('connection', (socket) => {
         } = messageFromClient;
 
         switch (type) {
+            case "echo":
+                /// Echo the message back to the client
+                console.log("Echoing message back to client:")
+                console.log(messageFromClient)
+                sendMessageToWebSocket(sender, type, category, topic, body, created, socket);
+                break;
             case "bus":
-                broadcastToClients(sender, type, category, topic, body, created);
+                /// Broadcast the message to all other clients connected to the server except this one
+                broadcastToClients(sender, type, category, topic, body, created, socket);
                 break;
             case "esp32":
                 switch (category) {
                     case "camera":
                         console.log("Camera data received from ESP32 client:")
                         console.log(body)
-                        broadcastToClients(sender, type, category, topic, body, created);
+                        broadcastToClients(sender, type, category, topic, body, created, socket);
                         break;
                     case "sensor":
                         console.log("Sensor data received from ESP32 client:")
                         console.log(body)
-                        broadcastToClients(sender, type, category, topic, body, created);
+                        broadcastToClients(sender, type, category, topic, body, created, socket);
                         break;
                     default:
                         console.log("Data received from ESP32 client:")
@@ -140,21 +147,22 @@ wss.on('connection', (socket) => {
 
 });
 
-function sendMessageToWebSocket(sender, type, category, topic, body, socket, created) {
-    socket.send(JSON.stringify({
+function sendMessageToWebSocket(sender, type, category, topic, body, created, socket) {
+    const data = {
         "_ws_sender": sender,
         "_ws_type": type,
         "_ws_category": category,
         "_ws_topic": topic,
         "_ws_body": body,
         "_ws_created": created,
-    }));
+    }
+    socket.send(JSON.stringify(data));
 }
 
-function broadcastToClients(sender, type, category, topic, body, created) {
+function broadcastToClients(sender, type, category, topic, body, created, fromSocket) {
     wss.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN) {
-            if (client != socket) sendMessageToWebSocket(sender, type, category, topic, body, client, created)
+            if (client != fromSocket) sendMessageToWebSocket(sender, type, category, topic, body, created, client)
         }
     });
 }
