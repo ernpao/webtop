@@ -1,13 +1,12 @@
 
-const express = require('express')
-
+import express from 'express';
 // Import controllers
 const routes = require('./controllers/web_server/routes')
 const desktop = require('./controllers/web_server/desktop')
 const ocr = require('./controllers/web_server/ocr')
 
 // Setup Web server
-function create(port) {
+export function createWs(port: number) {
     const webServer = express()
     webServer.use(express.json())
     webServer.use(express.static(__dirname + '/'));
@@ -21,5 +20,3 @@ function create(port) {
     webServer.listen(port)
     return webServer;
 }
-
-module.exports = { createWebServer: create };

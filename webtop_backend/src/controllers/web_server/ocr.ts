@@ -4,7 +4,7 @@ const fs = require('fs')
 const request = require('request')
 
 module.exports = {
-    postOcr: (req, res) => {
+    postOcr: (req: any, res: any) => {
         // Image url provided by user for OCR
         const { url } = req.body
 
@@ -21,7 +21,7 @@ module.exports = {
                 const { text, confidence } = data
 
                 // Base result json
-                var result = { success: true, jobId, text, confidence };
+                var result: any = { success: true, jobId, text, confidence };
 
                 // Process user query to determine which
                 // data to include in results
