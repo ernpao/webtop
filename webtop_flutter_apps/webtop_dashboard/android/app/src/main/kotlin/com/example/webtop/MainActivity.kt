@@ -1,4 +1,4 @@
-package com.example.webtop
+package dashboard.tech.codera.webtop
 
 import io.flutter.embedding.android.FlutterActivity
 

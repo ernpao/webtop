@@ -1,0 +1,3 @@
+[submodule "webtop_flutter_apps/glider"]
+	path = webtop_flutter_apps/glider
+	url = git@github.com:ernpao/glider.git
