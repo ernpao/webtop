@@ -13,9 +13,10 @@ class WebtopDashboard extends StatelessWidget {
       providers: [],
       theme: ThemeData.dark(),
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Container(
           child: WebSocketMonitor(
-            webSocket: WebtopClient(
+            webSocket: WebtopAPI(
               host: "192.168.100.191",
               port: 6767,
               socketPort: 6868,
@@ -28,24 +29,18 @@ class WebtopDashboard extends StatelessWidget {
                   final e = event.asMessageEvent();
                   final message = e.message;
                   if (message.hasBody) {
-                    final bytes = message.bodyAsUint8List();
-                    print(bytes.runtimeType);
-                    if (bytes != null) {
-                      return Center(child: Image.memory(bytes));
+                    if (message.sender == "Buffer Source") {
+                      final json = JSON.parse(message.body!);
+                      final bytes = json.get("data").toString().toUint8List();
+                      return Center(
+                        child: Image.memory(
+                          bytes,
+                          errorBuilder: (_, __, ___) => SizedBox.shrink(),
+                        ),
+                      );
                     }
                   }
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(e.message.created.formattedDateTime),
-                        // Text(e.message.body ?? ""),
-                      ],
-                    ),
-                  );
                 }
-              } else {
-                print("Null WebSocket event on rebuild.");
               }
               return const Center(child: Text("No Data"));
             },
