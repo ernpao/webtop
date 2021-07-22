@@ -13,7 +13,8 @@ function create(port) {
                 wss.clients.forEach(function each(client) {
                     var clientIsOpen = client.readyState === WebSocket.OPEN;
                     if (client != socket && clientIsOpen) {
-                        client.send(JSON.stringify(buffer));
+                        const body = JSON.stringify(buffer);
+                        sendMessageToWebSocket("Buffer Source", null, null, null, body, Date.now(), client);
                     }
                 });
                 return;
