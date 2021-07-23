@@ -1,8 +1,7 @@
 import WebSocket from 'ws';
+import MIDIController from './controllers/web_socket_server/midi';
 
 class WebSocketServer {
-    #port: number;
-    #wss: WebSocket.Server;
     constructor(port: number) {
         this.#port = port;
         this.#wss = new WebSocket.Server({ port: port })
@@ -10,14 +9,36 @@ class WebSocketServer {
         console.log(`Created a new WebSocketServer listening on port ${this.#port}`)
     }
 
+    #port: number;
+    #wss: WebSocket.Server;
+
     #setupWebSocketServer() {
         this.#wss.on('connection', (socket) => {
             console.log("Connection established");
-            this.#setupWebSocket(socket)
+            this.#setupWebSocket(socket);
         });
     }
 
-    #handleBufferMessage(buffer: Buffer, socket: WebSocket) {
+    #setupWebSocket(socket: WebSocket) {
+        socket.on('message', (message) => {
+            if (Buffer.isBuffer(message)) {
+                this.#processBufferTypeMessage(message, socket);
+            } else {
+                this.#processSocketMessage(message.toString(), socket);
+            }
+        });
+
+        socket.on('close', () => {
+            console.log("Connection closed");
+        });
+
+        socket.on('error', (e) => {
+            console.error("Connection Error:");
+            console.error(e);
+        });
+    }
+
+    #processBufferTypeMessage(buffer: Buffer, socket: WebSocket) {
         this.#wss.clients.forEach((client) => {
             var clientIsOpen = client.readyState === WebSocket.OPEN;
             if (client != socket && clientIsOpen) {
@@ -36,15 +57,15 @@ class WebSocketServer {
         });
     }
 
-    #handleMessage(messageFromClient: string, client: WebSocket) {
+    #processSocketMessage(messageFromClient: string, client: WebSocket) {
 
         let message = WebSocketMessage.fromJsonString(messageFromClient)
 
         switch (message.type) {
             case "echo":
                 /// Echo the message back to the client
-                console.log("Echoing message back to client:")
-                console.log(message.toJson())
+                console.log("Echoing message back to client:");
+                console.log(message.toJson());
                 this.#sendMessageToWebSocket(message, client);
                 break;
             case "bus":
@@ -54,46 +75,40 @@ class WebSocketServer {
             case "iot":
                 switch (message.category) {
                     case "camera":
-                        console.log("Camera data received from IOT client:")
-                        console.log(message.body)
+                        console.log("Camera data received from IOT client:");
+                        console.log(message.body);
                         this.#broadcastToClients(message, client);
                         break;
                     case "sensor":
-                        console.log("Sensor data received from IOT client:")
-                        console.log(message.body)
+                        console.log("Sensor data received from IOT client:");
+                        console.log(message.body);
                         this.#broadcastToClients(message, client);
                         break;
                     default:
-                        console.log("Data received from IOT client:")
-                        console.log(message.body)
+                        console.log("Data received from IOT client:");
+                        console.log(message.body);
+                        break;
+                }
+                break;
+            case "midi":
+                console.log("MIDI command received:");
+                console.log(message.body);
+                let body = message.body;
+                switch (message.category) {
+                    case "cc":
+                        // let midi = new MIDIController("IAC Driver Webtop MIDI");
+                        let midi = new MIDIController(message.body.name);
+                        midi.sendCC(body.controller, body.value, body.channel);
+                        break;
+                    default:
                         break;
                 }
                 break;
             default:
-                console.log("Data received from Webtop client:")
+                console.log("Data received from Webtop client:");
                 console.log(message.toJson());
                 break;
         }
-    }
-
-
-    #setupWebSocket(socket: WebSocket) {
-        socket.on('message', (message) => {
-            if (Buffer.isBuffer(message)) {
-                this.#handleBufferMessage(message, socket);
-            } else {
-                this.#handleMessage(message.toString(), socket);
-            }
-        });
-
-        socket.on('close', () => {
-            console.log("Connection closed");
-        });
-
-        socket.on('error', (e) => {
-            console.error("Connection Error:");
-            console.error(e);
-        });
     }
 
     #sendMessageToWebSocket(message: WebSocketMessage, socket: WebSocket) {
