@@ -11,4 +11,4 @@ class Desktop {
     }
 }
 
-export = Desktop 
+export = Desktop
