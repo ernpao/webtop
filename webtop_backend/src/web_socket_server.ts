@@ -11,9 +11,10 @@ export function createWss(port: number) {
             if (Buffer.isBuffer(message)) {
                 var buffer = message;
                 wss.clients.forEach(function each(client) {
-                    var clientIsOpen = client.readyState === WebSocket.OPEN;
+                    var clientIsOpen = client.readyState === WS.OPEN;
                     if (client != socket && clientIsOpen) {
-                        client.send(JSON.stringify(buffer));
+                        const body = JSON.stringify(buffer);
+                        sendMessageToWebSocket("Buffer Source", client, undefined, undefined, undefined, body, Date.now().toLocaleString());
                     }
                 });
                 return;
@@ -41,7 +42,7 @@ export function createWss(port: number) {
                         /// Echo the message back to the client
                         console.log("Echoing message back to client:")
                         console.log(messageFromClient)
-                        sendMessageToWebSocket(sender, type, category, topic, body, created, socket);
+                        sendMessageToWebSocket(sender, socket, type, category, topic, body, created);
                         break;
                     case "bus":
                         /// Broadcast the message to all other clients connected to the server except this one
@@ -89,12 +90,12 @@ export function createWss(port: number) {
 
     function sendMessageToWebSocket(
         sender: string,
-        type: string,
-        category: string,
-        topic: string,
-        body: any,
-        created: string,
-        webSocket: WS) {
+        webSocket: WS,
+        type?: string,
+        category?: string,
+        topic?: string,
+        body?: any,
+        created?: string) {
         const data = {
             "_ws_sender": sender,
             "_ws_type": type,
@@ -116,7 +117,7 @@ export function createWss(port: number) {
         fromSocket: WS) {
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
-                if (client != fromSocket) sendMessageToWebSocket(sender, type, category, topic, body, created, client)
+                if (client != fromSocket) sendMessageToWebSocket(sender, client, type, category, topic, body, created)
             }
         });
     }

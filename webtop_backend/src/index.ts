@@ -6,3 +6,5 @@ createWs(wsPort)
 import { createWss } from './web_socket_server';
 const wssPort = parseInt(process.env.WEBSOCKET_PORT == undefined ? '' : process.env.WEBSOCKET_PORT)
 createWss(wssPort)
+
+console.log("Webtop backend server running...")
