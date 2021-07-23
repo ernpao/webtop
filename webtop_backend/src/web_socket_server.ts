@@ -92,12 +92,12 @@ class WebSocketServer {
                 break;
             case "midi":
                 console.log("MIDI command received:");
-                console.log(message.body);
-                let body = message.body;
+                let body = JSON.parse(message.body);
+                console.log(body);
                 switch (message.category) {
                     case "cc":
                         // let midi = new MIDIController("IAC Driver Webtop MIDI");
-                        let midi = new MIDIController(message.body.name);
+                        let midi = new MIDIController(body.name);
                         midi.sendCC(body.controller, body.value, body.channel);
                         break;
                     default:
