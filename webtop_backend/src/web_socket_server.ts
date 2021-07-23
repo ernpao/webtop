@@ -1,22 +1,37 @@
 import WebSocket from 'ws';
 
-// Setup WebSocket server
-export function createWss(port: number) {
-    const wss = new WebSocket.Server({ port: port })
-    wss.on('connection', (socket) => {
-        console.log("Connection established");
+class WebSocketServer {
+    #port: number;
+    #wss: WebSocket.Server;
+    constructor(port: number) {
+        this.#port = port;
+        this.#wss = new WebSocket.Server({ port: port })
+        this.#setupWebSocketServer()
+        console.log(`Created a new WebSocketServer listening on port ${this.#port}`)
+    }
 
+    #setupWebSocketServer() {
+        this.#wss.on('connection', (socket) => {
+            console.log("Connection established");
+            this.#setupWebSocket(socket)
+        });
+    }
+
+    #handleBufferMessage(buffer: Buffer, socket: WebSocket) {
+        this.#wss.clients.forEach((client) => {
+            var clientIsOpen = client.readyState === WebSocket.OPEN;
+            if (client != socket && clientIsOpen) {
+                const body = JSON.stringify(buffer);
+                this.#sendMessageToWebSocket("Buffer Source", client, undefined, undefined, undefined, body, Date.now().toLocaleString());
+            }
+        });
+    }
+
+
+    #setupWebSocket(socket: WebSocket) {
         socket.on('message', (message) => {
-
             if (Buffer.isBuffer(message)) {
-                var buffer = message;
-                wss.clients.forEach(function each(client) {
-                    var clientIsOpen = client.readyState === WebSocket.OPEN;
-                    if (client != socket && clientIsOpen) {
-                        const body = JSON.stringify(buffer);
-                        sendMessageToWebSocket("Buffer Source", client, undefined, undefined, undefined, body, Date.now().toLocaleString());
-                    }
-                });
+                this.#handleBufferMessage(message, socket);
                 return;
             } else {
 
@@ -42,23 +57,23 @@ export function createWss(port: number) {
                         /// Echo the message back to the client
                         console.log("Echoing message back to client:")
                         console.log(messageFromClient)
-                        sendMessageToWebSocket(sender, socket, type, category, topic, body, created);
+                        this.#sendMessageToWebSocket(sender, socket, type, category, topic, body, created);
                         break;
                     case "bus":
                         /// Broadcast the message to all other clients connected to the server except this one
-                        broadcastToClients(sender, type, category, topic, body, created, socket);
+                        this.#broadcastToClients(sender, type, category, topic, body, created, socket);
                         break;
                     case "iot":
                         switch (category) {
                             case "camera":
                                 console.log("Camera data received from IOT client:")
                                 console.log(body)
-                                broadcastToClients(sender, type, category, topic, body, created, socket);
+                                this.#broadcastToClients(sender, type, category, topic, body, created, socket);
                                 break;
                             case "sensor":
                                 console.log("Sensor data received from IOT client:")
                                 console.log(body)
-                                broadcastToClients(sender, type, category, topic, body, created, socket);
+                                this.#broadcastToClients(sender, type, category, topic, body, created, socket);
                                 break;
                             default:
                                 console.log("Data received from IOT client:")
@@ -72,9 +87,6 @@ export function createWss(port: number) {
                         break;
                 }
             }
-
-
-
         });
 
         socket.on('close', () => {
@@ -82,13 +94,12 @@ export function createWss(port: number) {
         });
 
         socket.on('error', (e) => {
-            console.log("Connection Error:");
-            console.log(e);
+            console.error("Connection Error:");
+            console.error(e);
         });
+    }
 
-    });
-
-    function sendMessageToWebSocket(
+    #sendMessageToWebSocket(
         sender: string,
         webSocket: WebSocket,
         type?: string,
@@ -107,7 +118,7 @@ export function createWss(port: number) {
         webSocket.send(JSON.stringify(data));
     }
 
-    function broadcastToClients(
+    #broadcastToClients(
         sender: string,
         type: string,
         category: string,
@@ -115,10 +126,15 @@ export function createWss(port: number) {
         body: any,
         created: string,
         fromSocket: WebSocket) {
-        wss.clients.forEach(function each(client) {
+        this.#wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-                if (client != fromSocket) sendMessageToWebSocket(sender, client, type, category, topic, body, created)
+                if (client != fromSocket) {
+                    this.#sendMessageToWebSocket(sender, client, type, category, topic, body, created)
+                }
             }
         });
     }
+
 }
+
+export = WebSocketServer

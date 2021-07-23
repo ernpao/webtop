@@ -1,25 +1,37 @@
 
-import express from 'express';
-// Import controllers
+import Express from 'express';
+
+// Import controllers classes
 import Desktop = require('./controllers/web_server/desktop')
 import OCR = require('./controllers/web_server/ocr')
 import Routes = require('./controllers/web_server/routes')
 
-// Setup Web server
-const desktop = new Desktop();
-const ocr = new OCR();
-const routes = new Routes();
+class WebServer {
+    #port: number;
+    #webServer: Express.Express;
 
-export function createWs(port: number) {
-    const webServer = express()
-    webServer.use(express.json())
-    webServer.use(express.static(__dirname + '/html'));
+    /// Controllers
+    #desktopController = new Desktop();
+    #ocrController = new OCR();
+    #routesController = new Routes();
 
-    webServer.get('/', routes.index)
+    constructor(port: number) {
+        this.#port = port;
+        this.#webServer = Express();
+        this.#webServer.use(Express.json())
+        this.#webServer.use(Express.static(__dirname + '/html'));
 
-    webServer.post('/ocr', ocr.postOcr)
+        this.#webServer.get('/', this.#routesController.index)
 
-    webServer.get('/desktop/info', desktop.getDesktopInfo)
+        this.#webServer.post('/ocr', this.#ocrController.postOcr)
 
-    webServer.listen(port)
+        this.#webServer.get('/desktop/info', this.#desktopController.getDesktopInfo)
+
+        this.#webServer.listen(this.#port)
+
+        console.log(`Created a new WebServer listening on port ${this.#port}`)
+    }
+
 }
+
+export = WebServer

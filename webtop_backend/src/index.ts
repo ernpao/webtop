@@ -1,10 +1,10 @@
 require('dotenv').config()
-import { createWs } from './web_server';
-const wsPort = parseInt(process.env.PORT == undefined ? '' : process.env.PORT)
-createWs(wsPort)
+import WebServer from './web_server';
+import WebSocketServer from './web_socket_server';
 
-import { createWss } from './web_socket_server';
-const wssPort = parseInt(process.env.WEBSOCKET_PORT == undefined ? '' : process.env.WEBSOCKET_PORT)
-createWss(wssPort)
+let wsPort = parseInt(process.env.PORT == undefined ? '' : process.env.PORT)
+let wssPort = parseInt(process.env.WEBSOCKET_PORT == undefined ? '' : process.env.WEBSOCKET_PORT)
 
-console.log("Webtop backend server running...")
+new WebServer(wsPort)
+new WebSocketServer(wssPort)
+
