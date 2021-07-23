@@ -1,10 +1,11 @@
+import { Request, Response, NextFunction } from 'express';
 
 const Tesseract = require('tesseract.js')
 const fs = require('fs')
 const request = require('request')
 
 module.exports = {
-    postOcr: (req: any, res: any) => {
+    postOcr: (req: Request, res: Response) => {
         // Image url provided by user for OCR
         const { url } = req.body
 

@@ -1,9 +1,12 @@
 
 
+import { Request, Response, NextFunction } from 'express';
+
 const robotjs = require('robotjs')
 
 module.exports = {
-    getDesktopInfo: (req: any, res: any) => {
+    desktopIndex: (req: Request, res: Response) => { },
+    getDesktopInfo: (req: Request, res: Response) => {
         return res.json({
             success: true,
         });
