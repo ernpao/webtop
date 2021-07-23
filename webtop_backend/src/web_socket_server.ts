@@ -22,9 +22,58 @@ class WebSocketServer {
             var clientIsOpen = client.readyState === WebSocket.OPEN;
             if (client != socket && clientIsOpen) {
                 const body = JSON.stringify(buffer);
-                this.#sendMessageToWebSocket("Buffer Source", client, undefined, undefined, undefined, body, Date.now().toLocaleString());
+
+                let webSocketMessage = new WebSocketMessage(
+                    "Buffer Source",
+                    undefined,
+                    undefined,
+                    undefined,
+                    body
+                );
+
+                this.#sendMessageToWebSocket(webSocketMessage, client);
             }
         });
+    }
+
+    #handleMessage(messageFromClient: string, client: WebSocket) {
+
+        let message = WebSocketMessage.fromJsonString(messageFromClient)
+
+        switch (message.type) {
+            case "echo":
+                /// Echo the message back to the client
+                console.log("Echoing message back to client:")
+                console.log(message.toJson())
+                this.#sendMessageToWebSocket(message, client);
+                break;
+            case "bus":
+                /// Broadcast the message to all other clients connected to the server except this one
+                this.#broadcastToClients(message, client);
+                break;
+            case "iot":
+                switch (message.category) {
+                    case "camera":
+                        console.log("Camera data received from IOT client:")
+                        console.log(message.body)
+                        this.#broadcastToClients(message, client);
+                        break;
+                    case "sensor":
+                        console.log("Sensor data received from IOT client:")
+                        console.log(message.body)
+                        this.#broadcastToClients(message, client);
+                        break;
+                    default:
+                        console.log("Data received from IOT client:")
+                        console.log(message.body)
+                        break;
+                }
+                break;
+            default:
+                console.log("Data received from Webtop client:")
+                console.log(message.toJson());
+                break;
+        }
     }
 
 
@@ -32,60 +81,8 @@ class WebSocketServer {
         socket.on('message', (message) => {
             if (Buffer.isBuffer(message)) {
                 this.#handleBufferMessage(message, socket);
-                return;
             } else {
-
-                var messageFromClient;
-
-                if (typeof message === 'string') {
-                    messageFromClient = JSON.parse(message);
-                } else {
-                    messageFromClient = message;
-                }
-
-                const {
-                    _ws_sender: sender,
-                    _ws_category: category,
-                    _ws_type: type,
-                    _ws_topic: topic,
-                    _ws_body: body,
-                    _ws_created: created,
-                } = messageFromClient;
-
-                switch (type) {
-                    case "echo":
-                        /// Echo the message back to the client
-                        console.log("Echoing message back to client:")
-                        console.log(messageFromClient)
-                        this.#sendMessageToWebSocket(sender, socket, type, category, topic, body, created);
-                        break;
-                    case "bus":
-                        /// Broadcast the message to all other clients connected to the server except this one
-                        this.#broadcastToClients(sender, type, category, topic, body, created, socket);
-                        break;
-                    case "iot":
-                        switch (category) {
-                            case "camera":
-                                console.log("Camera data received from IOT client:")
-                                console.log(body)
-                                this.#broadcastToClients(sender, type, category, topic, body, created, socket);
-                                break;
-                            case "sensor":
-                                console.log("Sensor data received from IOT client:")
-                                console.log(body)
-                                this.#broadcastToClients(sender, type, category, topic, body, created, socket);
-                                break;
-                            default:
-                                console.log("Data received from IOT client:")
-                                console.log(body)
-                                break;
-                        }
-                        break;
-                    default:
-                        console.log("Data received from Webtop client:")
-                        console.log(messageFromClient);
-                        break;
-                }
+                this.#handleMessage(message.toString(), socket);
             }
         });
 
@@ -99,42 +96,68 @@ class WebSocketServer {
         });
     }
 
-    #sendMessageToWebSocket(
-        sender: string,
-        webSocket: WebSocket,
-        type?: string,
-        category?: string,
-        topic?: string,
-        body?: any,
-        created?: string) {
-        const data = {
-            "_ws_sender": sender,
-            "_ws_type": type,
-            "_ws_category": category,
-            "_ws_topic": topic,
-            "_ws_body": body,
-            "_ws_created": created,
-        }
-        webSocket.send(JSON.stringify(data));
+    #sendMessageToWebSocket(message: WebSocketMessage, socket: WebSocket) {
+        socket.send(message.stringify());
     }
 
-    #broadcastToClients(
-        sender: string,
-        type: string,
-        category: string,
-        topic: string,
-        body: any,
-        created: string,
-        fromSocket: WebSocket) {
+    #broadcastToClients(message: WebSocketMessage, originator: WebSocket) {
         this.#wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-                if (client != fromSocket) {
-                    this.#sendMessageToWebSocket(sender, client, type, category, topic, body, created)
+                if (client != originator) {
+                    this.#sendMessageToWebSocket(message, originator)
                 }
             }
         });
     }
 
+}
+
+class WebSocketMessage {
+    sender: string;
+    type?: string;
+    category?: string;
+    topic?: string;
+    body?: any;
+    created: string;
+
+    constructor(sender: string, type?: string, category?: string, topic?: string, body?: any, created?: string) {
+        this.sender = sender;
+        this.type = type;
+        this.category = category;
+        this.topic = topic;
+        this.body = body;
+        this.created = created === undefined ? Date.now().toLocaleString() : created;
+    }
+
+    static fromJsonString(jsonString: string) {
+        return this.fromJson(JSON.parse(jsonString));
+    }
+
+    static fromJson(json: any): WebSocketMessage {
+        return new WebSocketMessage(
+            json._ws_sender,
+            json._ws_type,
+            json._ws_category,
+            json._ws_topic,
+            json._ws_body,
+            json._ws_created,
+        );
+    }
+
+    toJson(): any {
+        return {
+            _ws_sender: this.sender,
+            _ws_type: this.type,
+            _ws_category: this.category,
+            _ws_topic: this.topic,
+            _ws_body: this.body,
+            _ws_created: this.created,
+        };
+    }
+
+    stringify(): string {
+        return JSON.stringify(this.toJson());
+    }
 }
 
 export = WebSocketServer
