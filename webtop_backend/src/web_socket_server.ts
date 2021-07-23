@@ -1,8 +1,8 @@
-import WS from 'ws';
+import WebSocket from 'ws';
 
 // Setup WebSocket server
 export function createWss(port: number) {
-    const wss = new WS.Server({ port: port })
+    const wss = new WebSocket.Server({ port: port })
     wss.on('connection', (socket) => {
         console.log("Connection established");
 
@@ -11,7 +11,7 @@ export function createWss(port: number) {
             if (Buffer.isBuffer(message)) {
                 var buffer = message;
                 wss.clients.forEach(function each(client) {
-                    var clientIsOpen = client.readyState === WS.OPEN;
+                    var clientIsOpen = client.readyState === WebSocket.OPEN;
                     if (client != socket && clientIsOpen) {
                         const body = JSON.stringify(buffer);
                         sendMessageToWebSocket("Buffer Source", client, undefined, undefined, undefined, body, Date.now().toLocaleString());
@@ -90,7 +90,7 @@ export function createWss(port: number) {
 
     function sendMessageToWebSocket(
         sender: string,
-        webSocket: WS,
+        webSocket: WebSocket,
         type?: string,
         category?: string,
         topic?: string,
@@ -114,13 +114,11 @@ export function createWss(port: number) {
         topic: string,
         body: any,
         created: string,
-        fromSocket: WS) {
+        fromSocket: WebSocket) {
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 if (client != fromSocket) sendMessageToWebSocket(sender, client, type, category, topic, body, created)
             }
         });
     }
-
-    return wss;
 }

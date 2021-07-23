@@ -4,8 +4,8 @@ const Tesseract = require('tesseract.js')
 const fs = require('fs')
 const request = require('request')
 
-module.exports = {
-    postOcr: (req: Request, res: Response) => {
+class OCR {
+    postOcr(req: Request, res: Response) {
         // Image url provided by user for OCR
         const { url } = req.body
 
@@ -45,5 +45,7 @@ module.exports = {
             }
 
         });
-    },
+    }
 }
+
+export = OCR
