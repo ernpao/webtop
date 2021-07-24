@@ -1,50 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
-import 'widgets/custom_slider.dart';
+import 'widgets/continuous_control_slider.dart';
 
-class WebtopMidiController extends StatefulWidget {
-  WebtopMidiController({
-    Key? key,
-  }) : super(key: key);
+final MidiClient client = MidiClient(
+  host: "192.168.100.192",
+  socketPort: 6868,
+);
 
-  final MidiClient client = MidiClient(
-    host: "192.168.100.192",
-    socketPort: 6868,
-  );
-
-  @override
-  State<WebtopMidiController> createState() => _WebtopMidiControllerState();
-}
-
-class _WebtopMidiControllerState extends State<WebtopMidiController> {
-  int sliderVal = 0;
-
-  @override
-  void initState() {
-    widget.client.openSocket();
-    super.initState();
-  }
+class WebtopMidiController extends StatelessWidget {
+  const WebtopMidiController({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    client.openSocket();
     return Application(
       theme: ThemeData.dark(),
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomSlider(
-                onChanged: (val) {
-                  print('Slider value: $val');
-                  setState(() {
-                    sliderVal = val;
-                  });
-                },
-              )
-            ],
+      child: Builder(builder: (context) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Row(
+              children: [
+                ContinuousControlSlider(
+                  color: Colors.black,
+                  channel: 1,
+                  controller: 1,
+                  initialValue: 0,
+                  deviceName: "IAC Driver Webtop MIDI",
+                  interface: client,
+                ),
+                ContinuousControlSlider(
+                  color: Colors.black,
+                  channel: 1,
+                  controller: 2,
+                  initialValue: 0,
+                  deviceName: "IAC Driver Webtop MIDI",
+                  interface: client,
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
