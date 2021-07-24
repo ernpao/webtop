@@ -11,6 +11,7 @@ class MidiControlChangeSliderGroup extends StatelessWidget {
     this.color,
     this.title,
     this.onChanged,
+    this.sliderHeight = 350,
   }) : super(key: key);
 
   final String deviceName;
@@ -19,6 +20,7 @@ class MidiControlChangeSliderGroup extends StatelessWidget {
   final String? title;
   final List<MidiControlChangeSliderState> sliderData;
   final Function(MidiControlChangeSliderState sliderState)? onChanged;
+  final double sliderHeight;
 
   void _sendValue(int channel, int controller, int value) {
     interface.sendMidiCC(
@@ -44,6 +46,7 @@ class MidiControlChangeSliderGroup extends StatelessWidget {
         min: slider.min,
         max: slider.max,
         title: slider.title,
+        height: sliderHeight,
         onChanged: (value) {
           _sendValue(slider.channel, slider.controller, value);
           onChanged?.call(
@@ -67,6 +70,8 @@ class MidiControlChangeSliderGroup extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (title != null)
             Padding(
@@ -77,6 +82,8 @@ class MidiControlChangeSliderGroup extends StatelessWidget {
               ),
             ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: _buildSliders(),
           ),
         ],

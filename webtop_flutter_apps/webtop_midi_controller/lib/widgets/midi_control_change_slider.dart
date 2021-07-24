@@ -18,6 +18,7 @@ class MidiControlChangeSlider extends StatelessWidget {
     this.showControllerLabel = true,
     this.title,
     this.onChanged,
+    this.height = 350,
   })  : assert(max <= 127),
         assert(min >= 0),
         super(key: key);
@@ -34,6 +35,7 @@ class MidiControlChangeSlider extends StatelessWidget {
   final bool showChannelLabel;
   final String? title;
   final Function(int value)? onChanged;
+  final double height;
 
   void _sendValue(int value) {
     interface.sendMidiCC(
@@ -65,6 +67,8 @@ class MidiControlChangeSlider extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (title != null) Text(title!),
           if (showControllerLabel)
@@ -74,6 +78,7 @@ class MidiControlChangeSlider extends StatelessWidget {
             ),
           CustomSlider(
             color: color,
+            height: height,
             initialValue: initialValue.toDouble(),
             max: max.toDouble(),
             min: min.toDouble(),

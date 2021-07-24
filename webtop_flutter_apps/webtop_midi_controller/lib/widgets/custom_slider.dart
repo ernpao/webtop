@@ -8,6 +8,7 @@ class CustomSlider extends StatefulWidget {
     this.min = 0.0,
     this.max = 1.0,
     this.color,
+    this.height = 350,
   })  : assert(min < max),
         assert(initialValue >= min),
         assert(initialValue <= max),
@@ -18,6 +19,7 @@ class CustomSlider extends StatefulWidget {
   final double max;
   final double min;
   final Color? color;
+  final double height;
 
   @override
   State<CustomSlider> createState() => _CustomSliderState();
@@ -26,7 +28,7 @@ class CustomSlider extends StatefulWidget {
 class _CustomSliderState extends State<CustomSlider> {
   /// Slider size
 
-  static const double _height = 350;
+  double get _height => widget.height;
   static const double _width = 50;
 
   /// Slider track constants
@@ -54,8 +56,8 @@ class _CustomSliderState extends State<CustomSlider> {
 
   /// Slider position constants
 
-  static const _maxSliderPosition = _height - _thumbSize;
-  late final double _minSliderPosition = (min / max) * _maxSliderPosition;
+  double get _maxSliderPosition => _height - _thumbSize;
+  double get _minSliderPosition => (min / max) * _maxSliderPosition;
 
   double get max => widget.max;
   double get min => widget.min;
@@ -67,6 +69,7 @@ class _CustomSliderState extends State<CustomSlider> {
 
   @override
   void initState() {
+    /// TODO: Use value instead of initialValue so that the widget is redrawn when device orientation changes.
     _sliderPosition = (initialValue / max) * _maxSliderPosition;
     super.initState();
   }
