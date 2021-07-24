@@ -16,6 +16,8 @@ class ContinuousControlSlider extends StatelessWidget {
     this.color,
     this.showChannelLabel = true,
     this.showControllerLabel = true,
+    this.title,
+    this.onChanged,
   })  : assert(max <= 127),
         assert(min >= 0),
         super(key: key);
@@ -28,8 +30,10 @@ class ContinuousControlSlider extends StatelessWidget {
   final int max;
   final int min;
   final Color? color;
-  final bool? showControllerLabel;
-  final bool? showChannelLabel;
+  final bool showControllerLabel;
+  final bool showChannelLabel;
+  final String? title;
+  final Function(int value)? onChanged;
 
   void _sendValue(int value) {
     interface.sendMidiCC(
@@ -62,21 +66,28 @@ class ContinuousControlSlider extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          _buildLabel(
-            context,
-            "CTRL: ${controller.toString().padLeft(2, '0')}",
-          ),
+          if (title != null) Text(title!),
+          if (showControllerLabel)
+            _buildLabel(
+              context,
+              "CTRL: ${controller.toString().padLeft(2, '0')}",
+            ),
           CustomSlider(
             color: color,
             initialValue: initialValue.toDouble(),
             max: max.toDouble(),
             min: min.toDouble(),
-            onChanged: (value) => _sendValue(value.toInt()),
+            onChanged: (value) {
+              final intValue = value.toInt();
+              _sendValue(intValue);
+              onChanged?.call(intValue);
+            },
           ),
-          _buildLabel(
-            context,
-            "CHAN: ${channel.toString().padLeft(2, '0')}",
-          ),
+          if (showChannelLabel)
+            _buildLabel(
+              context,
+              "CHAN: ${channel.toString().padLeft(2, '0')}",
+            ),
         ],
       ),
     );

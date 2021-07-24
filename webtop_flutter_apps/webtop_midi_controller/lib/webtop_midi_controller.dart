@@ -21,20 +21,24 @@ class WebtopMidiController extends StatelessWidget {
             child: Row(
               children: [
                 ContinuousControlSlider(
-                  color: Colors.black,
+                  title: "GAIN",
+                  color: Colors.grey.shade900,
                   channel: 1,
                   controller: 1,
                   initialValue: 0,
                   deviceName: "IAC Driver Webtop MIDI",
                   interface: client,
+                  onChanged: print,
                 ),
                 ContinuousControlSlider(
-                  color: Colors.black,
+                  title: "LEVEL",
+                  color: Colors.grey.shade900,
                   channel: 1,
                   controller: 2,
                   initialValue: 0,
                   deviceName: "IAC Driver Webtop MIDI",
                   interface: client,
+                  onChanged: print,
                 ),
               ],
             ),
