@@ -3,8 +3,8 @@ import 'package:glider_webtop/glider_webtop.dart';
 
 import 'custom_slider.dart';
 
-class ContinuousControlSlider extends StatelessWidget {
-  const ContinuousControlSlider({
+class MidiControlChangeSlider extends StatelessWidget {
+  const MidiControlChangeSlider({
     Key? key,
     required this.deviceName,
     required this.channel,
