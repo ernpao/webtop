@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
+
 import 'cc_slider.dart';
 
 class CCSliderGroup extends StatelessWidget {
@@ -105,16 +106,16 @@ class CCSliderParameters {
     required this.channel,
     required this.controller,
     required this.value,
-    this.min = 0,
-    this.max = 127,
+    this.min,
+    this.max,
     this.title,
   });
 
   final int channel;
   final int controller;
   final int value;
-  final int min;
-  final int max;
+  final int? min;
+  final int? max;
   final String? title;
 
   @override

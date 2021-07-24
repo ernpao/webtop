@@ -16,8 +16,9 @@ class WebtopMidiController extends StatefulWidget {
     CCSliderParameters(
       channel: 1,
       controller: 1,
-      value: 0,
+      value: 64,
       title: "GAIN",
+      min: 20,
     ),
     CCSliderParameters(
       channel: 1,

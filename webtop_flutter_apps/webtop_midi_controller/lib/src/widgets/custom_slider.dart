@@ -116,7 +116,7 @@ class CustomSlider extends StatelessWidget {
     return GestureDetector(
       onVerticalDragUpdate: (e) {
         final val = _calculateNewVal(context, e.primaryDelta);
-        if (val != null) onChanged(val);
+        if (val != null) onChanged(val.clamp(min, max));
       },
       child: Container(
         height: _thumbSize,
