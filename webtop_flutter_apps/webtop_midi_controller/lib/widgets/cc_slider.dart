@@ -3,14 +3,14 @@ import 'package:glider_webtop/glider_webtop.dart';
 
 import 'custom_slider.dart';
 
-class MidiControlChangeSlider extends StatelessWidget {
-  const MidiControlChangeSlider({
+class CCSlider extends StatelessWidget {
+  const CCSlider({
     Key? key,
     required this.deviceName,
     required this.channel,
     required this.controller,
     required this.interface,
-    this.initialValue = 0,
+    required this.value,
     this.min = 0,
     this.max = 127,
     this.color,
@@ -27,7 +27,7 @@ class MidiControlChangeSlider extends StatelessWidget {
   final int channel;
   final int controller;
   final MidiInterface interface;
-  final int initialValue;
+  final int value;
   final int max;
   final int min;
   final Color? color;
@@ -63,7 +63,7 @@ class MidiControlChangeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _sendValue(initialValue);
+    _sendValue(value);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -79,11 +79,12 @@ class MidiControlChangeSlider extends StatelessWidget {
           CustomSlider(
             color: color,
             height: height,
-            initialValue: initialValue.toDouble(),
+            value: value.toDouble(),
             max: max.toDouble(),
             min: min.toDouble(),
             onChanged: (value) {
               final intValue = value.toInt();
+              debugPrint("MIDI CC Slider value changed: $value");
               _sendValue(intValue);
               onChanged?.call(intValue);
             },

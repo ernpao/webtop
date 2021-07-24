@@ -1,34 +1,29 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:hover/hover.dart';
 
-class CustomSlider extends StatefulWidget {
-  const CustomSlider({
+class CustomSlider extends StatelessWidget {
+  CustomSlider({
     Key? key,
     required this.onChanged,
-    this.initialValue = 0.0,
+    this.value = 0.0,
     this.min = 0.0,
     this.max = 1.0,
     this.color,
     this.height = 350,
   })  : assert(min < max),
-        assert(initialValue >= min),
-        assert(initialValue <= max),
+        assert(value >= min),
+        assert(value <= max),
         super(key: key);
 
   final Function(double value) onChanged;
-  final double initialValue;
+  final double value;
   final double max;
   final double min;
   final Color? color;
   final double height;
 
-  @override
-  State<CustomSlider> createState() => _CustomSliderState();
-}
-
-class _CustomSliderState extends State<CustomSlider> {
   /// Slider size
 
-  double get _height => widget.height;
   static const double _width = 50;
 
   /// Slider track constants
@@ -36,11 +31,6 @@ class _CustomSliderState extends State<CustomSlider> {
   static const double _trackWidth = 20;
   static const _trackLeft = (_width - _trackWidth) / 2;
   static const _trackRadius = Radius.circular(_trackWidth / 2);
-  // static final _trackShadow = BoxShadow(
-  //   blurRadius: 6,
-  //   offset: const Offset(2, 2),
-  //   color: CupertinoColors.black.withOpacity(0.15),
-  // );
 
   /// Slider thumb constants
 
@@ -48,49 +38,35 @@ class _CustomSliderState extends State<CustomSlider> {
   static const _thumbSizeHalf = _thumbSize / 2;
   static const _thumbLeft = (_width - _thumbSize) / 2;
   static const _thumbRadius = Radius.circular(_thumbSizeHalf);
-  static final _thumbShadow = BoxShadow(
+  static const _thumbShadow = BoxShadow(
     blurRadius: 6,
-    offset: const Offset(2, 2),
-    color: CupertinoColors.black.withOpacity(0.15),
+    offset: Offset(2, 2),
+    color: Colors.black54,
   );
 
   /// Slider position constants
 
-  double get _maxSliderPosition => _height - _thumbSize;
-  double get _minSliderPosition => (min / max) * _maxSliderPosition;
+  late final double _maxSliderPos = height - _thumbSize;
+  late final double _sliderPos = (value / max) * _maxSliderPos;
+  late final Color _sliderColor = color ?? Colors.blue;
 
-  double get max => widget.max;
-  double get min => widget.min;
-  double get initialValue => widget.initialValue;
-
-  late double _sliderPosition;
-
-  late final Color _color = widget.color ?? CupertinoColors.systemBlue;
-
-  @override
-  void initState() {
-    /// TODO: Use value instead of initialValue so that the widget is redrawn when device orientation changes.
-    _sliderPosition = (initialValue / max) * _maxSliderPosition;
-    super.initState();
-  }
-
-  void _updateSliderValue(Offset delta) {
-    double newPosition = (_sliderPosition - delta.dy).roundToDouble();
-
-    if (_valueWithinLimits(newPosition)) {
-      _sliderPosition = newPosition;
-      double val = _translateSliderPosition();
-      widget.onChanged(val);
-      setState(() {});
+  double? _calculateNewVal(BuildContext context, double? dy) {
+    if (dy != null) {
+      final scrHeight = Hover.getScreenHeight(context);
+      double newVal = (value - _scaleDeltaY(scrHeight, dy)).roundToDouble();
+      if (min <= value && value <= max) {
+        // debugPrint("Slider updated (within limits): $newValue (Delta: $delta)");
+        return newVal;
+      }
     }
   }
 
-  double _translateSliderPosition() {
-    return ((_sliderPosition / _maxSliderPosition) * (max));
-  }
+  /// Simply scale the delta based on the screen and widget height.
+  /// Probably a better implementation would be to scale the
+  /// delta based on velocity.
 
-  bool _valueWithinLimits(double value) {
-    return value <= _maxSliderPosition && value >= _minSliderPosition;
+  double _scaleDeltaY(double screenHeight, double dy) {
+    return dy * screenHeight / height;
   }
 
   @override
@@ -99,56 +75,56 @@ class _CustomSliderState extends State<CustomSlider> {
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         width: _width,
-        height: _height,
+        height: height,
         child: Stack(
           children: [
-            Positioned(
-              bottom: 0,
-              left: _trackLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: CupertinoColors.black.withOpacity(0.05),
-                  borderRadius: const BorderRadius.all(_trackRadius),
-                ),
-                width: _trackWidth,
-                height: _height,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: _trackLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: _color,
-                  // boxShadow: [_trackShadow],
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: _trackRadius,
-                    bottomRight: _trackRadius,
-                  ),
-                ),
-                width: _trackWidth,
-                height: _sliderPosition + _thumbSizeHalf,
-              ),
-            ),
+            Positioned(bottom: 0, left: _trackLeft, child: _trackBackground),
+            Positioned(bottom: 0, left: _trackLeft, child: _trackForeground),
             Positioned(
               left: _thumbLeft,
-              bottom: _sliderPosition,
-              child: GestureDetector(
-                onVerticalDragUpdate: (details) {
-                  _updateSliderValue(details.delta);
-                },
-                child: Container(
-                  height: _thumbSize,
-                  width: _thumbSize,
-                  decoration: BoxDecoration(
-                    color: _color,
-                    boxShadow: [_thumbShadow],
-                    borderRadius: const BorderRadius.all(_thumbRadius),
-                  ),
-                ),
-              ),
+              bottom: _sliderPos,
+              child: _buildTrackThumb(context),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  late final Widget _trackBackground = Container(
+    decoration: const BoxDecoration(
+      color: Colors.black12,
+      borderRadius: BorderRadius.all(_trackRadius),
+    ),
+    width: _trackWidth,
+    height: height,
+  );
+
+  late final Widget _trackForeground = Container(
+    decoration: BoxDecoration(
+      color: _sliderColor,
+      borderRadius: const BorderRadius.only(
+        bottomLeft: _trackRadius,
+        bottomRight: _trackRadius,
+      ),
+    ),
+    width: _trackWidth,
+    height: _sliderPos + _thumbSizeHalf,
+  );
+
+  Widget _buildTrackThumb(BuildContext context) {
+    return GestureDetector(
+      onVerticalDragUpdate: (e) {
+        final val = _calculateNewVal(context, e.primaryDelta);
+        if (val != null) onChanged(val);
+      },
+      child: Container(
+        height: _thumbSize,
+        width: _thumbSize,
+        decoration: BoxDecoration(
+          color: _sliderColor,
+          boxShadow: const [_thumbShadow],
+          borderRadius: const BorderRadius.all(_thumbRadius),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
-import 'widgets/midi_control_change_slider_group.dart';
+import 'widgets/cc_slider_group.dart';
 
 final MidiClient client = MidiClient(
   host: "192.168.100.192",
@@ -10,8 +10,40 @@ final MidiClient client = MidiClient(
 
 const String deviceName = "IAC Driver Webtop MIDI";
 
-class WebtopMidiController extends StatelessWidget {
-  const WebtopMidiController({Key? key}) : super(key: key);
+class WebtopMidiController extends StatefulWidget {
+  WebtopMidiController({Key? key}) : super(key: key);
+  final List<CCSliderParameters> initialData = [
+    CCSliderParameters(
+      channel: 1,
+      controller: 1,
+      value: 0,
+      title: "GAIN",
+    ),
+    CCSliderParameters(
+      channel: 1,
+      controller: 2,
+      value: 0,
+      title: "LEVEL",
+    ),
+    CCSliderParameters(
+      channel: 1,
+      controller: 3,
+      value: 0,
+      title: "TONE",
+    ),
+  ];
+  @override
+  State<WebtopMidiController> createState() => _WebtopMidiControllerState();
+}
+
+class _WebtopMidiControllerState extends State<WebtopMidiController> {
+  late List<CCSliderParameters> _data;
+
+  @override
+  void initState() {
+    _data = widget.initialData;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,35 +81,17 @@ class WebtopMidiController extends StatelessWidget {
                   //   interface: client,
                   //   onChanged: print,
                   // ),
-                  MidiControlChangeSliderGroup(
+                  CCSliderGroup(
                     deviceName: deviceName,
                     interface: client,
                     color: Colors.grey.shade900,
                     title: "8080D Distortion",
                     sliderHeight: sliderHeight,
-                    sliderData: [
-                      MidiControlChangeSliderState(
-                        channel: 1,
-                        controller: 1,
-                        value: 0,
-                        title: "GAIN",
-                      ),
-                      MidiControlChangeSliderState(
-                        channel: 1,
-                        controller: 2,
-                        value: 0,
-                        title: "LEVEL",
-                      ),
-                      MidiControlChangeSliderState(
-                        channel: 1,
-                        controller: 3,
-                        value: 0,
-                        title: "TONE",
-                      ),
-                    ],
-                    onChanged: (state) {
-                      debugPrint(
-                          "MIDI CC slider changed: Controller: ${state.controller} Channel: ${state.channel} Value: ${state.value}");
+                    sliderData: _data,
+                    onChanged: (data) {
+                      setState(() {
+                        _data = data;
+                      });
                     },
                   ),
                 ],
