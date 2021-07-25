@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 
 import 'cc_slider.dart';
+import 'cc_widget_parameters.dart';
 
 class CCSliderGroup extends StatelessWidget {
   const CCSliderGroup({
     Key? key,
-    required this.deviceName,
     required this.interface,
     required this.sliderData,
     this.color,
@@ -15,15 +15,14 @@ class CCSliderGroup extends StatelessWidget {
     this.sliderHeight = 350,
   }) : super(key: key);
 
-  final String deviceName;
   final MidiInterface interface;
   final Color? color;
   final String? title;
-  final List<CCSliderParameters> sliderData;
-  final Function(List<CCSliderParameters> sliderData)? onChanged;
+  final List<CCWidgetParameters> sliderData;
+  final Function(List<CCWidgetParameters> sliderData)? onChanged;
   final double sliderHeight;
 
-  void _sendValue(int channel, int controller, int value) {
+  void _sendValue(String deviceName, int channel, int controller, int value) {
     interface.sendMidiCC(
       deviceName,
       ControlChange(
@@ -38,25 +37,25 @@ class CCSliderGroup extends StatelessWidget {
     final sliders = <Widget>[];
     for (final slider in sliderData) {
       sliders.add(CCSlider(
-        deviceName: deviceName,
-        channel: slider.channel,
-        controller: slider.controller,
+        parameters: slider,
         interface: interface,
         color: color,
-        value: slider.value,
-        min: slider.min,
-        max: slider.max,
-        title: slider.title,
         height: sliderHeight,
         onChanged: (value) {
-          _sendValue(slider.channel, slider.controller, value);
+          _sendValue(
+            slider.targetDevice,
+            slider.channel,
+            slider.controller,
+            value,
+          );
 
           final data = sliderData;
           int index = data.indexOf(slider);
 
           if (index != -1) {
             data.replaceRange(index, index + 1, [
-              CCSliderParameters(
+              CCWidgetParameters(
+                targetDevice: slider.targetDevice,
                 title: slider.title,
                 channel: slider.channel,
                 controller: slider.controller,
@@ -98,28 +97,5 @@ class CCSliderGroup extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class CCSliderParameters {
-  CCSliderParameters({
-    required this.channel,
-    required this.controller,
-    required this.value,
-    this.min,
-    this.max,
-    this.title,
-  });
-
-  final int channel;
-  final int controller;
-  final int value;
-  final int? min;
-  final int? max;
-  final String? title;
-
-  @override
-  String toString() {
-    return "Slider State Channel: $channel Controller: $controller Value: $value";
   }
 }

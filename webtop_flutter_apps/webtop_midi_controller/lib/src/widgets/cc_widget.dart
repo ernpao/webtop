@@ -1,52 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 
-class CCBuilder extends StatelessWidget {
-  CCBuilder({
+import 'cc_widget_parameters.dart';
+
+/// Base class for a widget that sends MIDI Continous Control
+/// messages to the remote Webtop server.
+abstract class CCWidget extends StatelessWidget {
+  CCWidget({
     Key? key,
-    required this.deviceName,
-    required this.channel,
-    required this.controller,
     required this.interface,
-    required this.value,
-    required this.builder,
-    this.min,
-    this.max,
+    required this.parameters,
     this.showChannelLabel = true,
     this.showControllerLabel = true,
-    this.title,
   }) : super(key: key) {
-    _sendValue(value);
+    _sendMessage(parameters.value);
   }
+  final CCWidgetParameters parameters;
 
-  final String deviceName;
-  final int channel;
-  final int controller;
+  /// The interface that will be used to send CC messages.
   final MidiInterface interface;
-  final int value;
-  final int? max;
-  final int? min;
+
+  /// Indicates if the CC controller number should be displayed.
   final bool showControllerLabel;
+
+  /// Indicates if the CC channel number should be displayed.
   final bool showChannelLabel;
-  final String? title;
-  final Widget Function(
+
+  Widget renderControl(
     BuildContext context,
     int value,
     int min,
     int max,
     Function(int value) valueSetter,
-  ) builder;
+  );
 
-  late final int _min = min ?? 0;
-  late final int _max = max ?? 127;
+  late final int _min = parameters.min ?? 0;
+  late final int _max = parameters.max ?? 127;
 
-  void _sendValue(int value) {
+  void _sendMessage(int value) {
     interface.sendMidiCC(
-      deviceName,
+      parameters.targetDevice,
       ControlChange(
-        channel: channel,
-        value: value,
-        controller: controller,
+        channel: parameters.channel,
+        value: parameters.value,
+        controller: parameters.controller,
       ),
     );
   }
@@ -66,23 +63,27 @@ class CCBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Clamp the value to ensure it does not go
+    /// over the min and max values.
+    final value = parameters.value.clamp(_min, _max);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (title != null) Text(title!),
+          if (parameters.title != null) Text(parameters.title!),
           if (showControllerLabel)
             _buildLabel(
               context,
-              "CTRL: ${controller.toString().padLeft(2, '0')}",
+              "CTRL: ${parameters.controller.toString().padLeft(2, '0')}",
             ),
-          builder(context, value.clamp(_min, _max), _min, _max, _sendValue),
+          renderControl(context, value, _min, _max, _sendMessage),
           if (showChannelLabel)
             _buildLabel(
               context,
-              "CHAN: ${channel.toString().padLeft(2, '0')}",
+              "CHAN: ${parameters.channel.toString().padLeft(2, '0')}",
             ),
         ],
       ),
