@@ -3,44 +3,39 @@ import 'package:glider_webtop/glider_webtop.dart';
 
 import 'cc_widget.dart';
 import 'cc_widget_parameters.dart';
-import 'custom_slider.dart';
 
-class CCSlider extends CCWidget {
-  CCSlider({
+class CCButton extends CCWidget {
+  CCButton({
     Key? key,
     required CCWidgetParameters parameters,
     required MidiInterface interface,
     bool showChannelLabel = true,
     bool showControllerLabel = true,
     this.color,
-    Function(CCWidgetParameters parameters)? onChanged,
-    this.height = 350,
   }) : super(
           key: key,
           interface: interface,
           parameters: parameters,
           showChannelLabel: showChannelLabel,
           showControllerLabel: showControllerLabel,
-          onChanged: onChanged,
-          sendInitialParameters: true,
         );
 
   final Color? color;
-  final double height;
 
   @override
   Widget renderControl(BuildContext context, int value, int min, int max) {
-    return CustomSlider(
+    const double _size = 80;
+
+    return MaterialButton(
       color: color,
-      height: height,
-      value: value.toDouble(),
-      max: max.toDouble(),
-      min: min.toDouble(),
-      onChanged: (value) {
-        final val = value.toInt();
-        debugPrint("MIDI CC Slider value changed: $value");
-        onChanged?.call(copyParametersWithNewValue(val));
+      shape: const CircleBorder(),
+      onPressed: () {
+        sendValue(value);
       },
+      child: const SizedBox(
+        width: _size,
+        height: _size,
+      ),
     );
   }
 }

@@ -10,10 +10,12 @@ abstract class CCWidget extends StatelessWidget {
     Key? key,
     required this.interface,
     required this.parameters,
+    this.onChanged,
     this.showChannelLabel = true,
     this.showControllerLabel = true,
+    bool sendInitialParameters = false,
   }) : super(key: key) {
-    _sendMessage(parameters.value);
+    if (sendInitialParameters) sendValue(parameters.value);
   }
   final CCWidgetParameters parameters;
 
@@ -26,18 +28,28 @@ abstract class CCWidget extends StatelessWidget {
   /// Indicates if the CC channel number should be displayed.
   final bool showChannelLabel;
 
-  Widget renderControl(
-    BuildContext context,
-    int value,
-    int min,
-    int max,
-    Function(int value) valueSetter,
-  );
+  final Function(CCWidgetParameters parameters)? onChanged;
+
+  Widget renderControl(BuildContext context, int value, int min, int max);
+
+  /// Copies the parameters of this widget with the exception
+  /// of the [value] field set to [newValue].
+  CCWidgetParameters copyParametersWithNewValue(int newValue) {
+    return CCWidgetParameters(
+      channel: parameters.channel,
+      controller: parameters.controller,
+      targetDevice: parameters.targetDevice,
+      value: newValue,
+      max: parameters.max,
+      min: parameters.min,
+      title: parameters.title,
+    );
+  }
 
   late final int _min = parameters.min ?? 0;
   late final int _max = parameters.max ?? 127;
 
-  void _sendMessage(int value) {
+  void sendValue(int value) {
     interface.sendMidiCC(
       parameters.targetDevice,
       ControlChange(
@@ -79,7 +91,7 @@ abstract class CCWidget extends StatelessWidget {
               context,
               "CTRL: ${parameters.controller.toString().padLeft(2, '0')}",
             ),
-          renderControl(context, value, _min, _max, _sendMessage),
+          renderControl(context, value, _min, _max),
           if (showChannelLabel)
             _buildLabel(
               context,

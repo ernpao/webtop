@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
-import 'widgets/cc_slider_group.dart';
+
+import 'widgets/cc_group.dart';
 import 'widgets/cc_widget_parameters.dart';
 
-final MidiClient client = MidiClient(
+final MidiClient midiInterface = MidiClient(
   host: "192.168.100.192",
   socketPort: 6868,
 );
@@ -13,7 +14,7 @@ const String targetDevice = "IAC Driver Webtop MIDI";
 
 class WebtopMidiController extends StatefulWidget {
   WebtopMidiController({Key? key}) : super(key: key);
-  final List<CCWidgetParameters> initialData = [
+  final List<CCWidgetParameters> sliderParameters = [
     CCWidgetParameters(
       targetDevice: targetDevice,
       channel: 1,
@@ -36,6 +37,17 @@ class WebtopMidiController extends StatefulWidget {
       title: "TONE",
     ),
   ];
+
+  final List<CCWidgetParameters> switchParameters = [
+    CCWidgetParameters(
+      targetDevice: targetDevice,
+      channel: 1,
+      controller: 4,
+      value: 0,
+      title: "TOGGLE",
+    )
+  ];
+
   @override
   State<WebtopMidiController> createState() => _WebtopMidiControllerState();
 }
@@ -45,13 +57,14 @@ class _WebtopMidiControllerState extends State<WebtopMidiController> {
 
   @override
   void initState() {
-    client.openSocket();
-    _sliderGroupParameters = widget.initialData;
+    midiInterface.openSocket();
+    _sliderGroupParameters = widget.sliderParameters;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // print(_sliderGroupParameters);
     return Application(
       theme: ThemeData.dark(),
       child: Builder(builder: (context) {
@@ -66,13 +79,14 @@ class _WebtopMidiControllerState extends State<WebtopMidiController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CCSliderGroup(
-                    interface: client,
+                  CCWidgetGroup(
+                    interface: midiInterface,
                     color: Colors.white,
                     title: "8080D Distortion",
                     sliderHeight: sliderHeight,
-                    sliderData: _sliderGroupParameters,
-                    onChanged: (data) {
+                    sliders: _sliderGroupParameters,
+                    buttons: widget.switchParameters,
+                    onSlidersChanged: (data) {
                       setState(() {
                         _sliderGroupParameters = data;
                       });
