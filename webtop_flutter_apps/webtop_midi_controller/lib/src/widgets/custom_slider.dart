@@ -37,12 +37,10 @@ class CustomSlider extends StatelessWidget {
   static const double _thumbSize = 40;
   static const _thumbSizeHalf = _thumbSize / 2;
   static const _thumbLeft = (_width - _thumbSize) / 2;
-  static const _thumbRadius = Radius.circular(_thumbSizeHalf);
-  static const _thumbShadow = BoxShadow(
-    blurRadius: 6,
-    offset: Offset(2, 2),
-    color: Colors.black54,
-  );
+  static const _thumbRadius = BorderRadius.all(Radius.circular(_thumbSizeHalf));
+  static const _thumbShadow = [
+    BoxShadow(blurRadius: 6, offset: Offset(2, 2), color: Colors.black54)
+  ];
 
   /// Slider position constants
 
@@ -103,10 +101,7 @@ class CustomSlider extends StatelessWidget {
   late final Widget _trackForeground = Container(
     decoration: BoxDecoration(
       color: _sliderColor,
-      borderRadius: const BorderRadius.only(
-        bottomLeft: _trackRadius,
-        bottomRight: _trackRadius,
-      ),
+      borderRadius: _thumbRadius,
     ),
     width: _trackWidth,
     height: _sliderPos + _thumbSizeHalf,
@@ -123,8 +118,8 @@ class CustomSlider extends StatelessWidget {
         width: _thumbSize,
         decoration: BoxDecoration(
           color: _sliderColor,
-          boxShadow: const [_thumbShadow],
-          borderRadius: const BorderRadius.all(_thumbRadius),
+          boxShadow: _thumbShadow,
+          borderRadius: _thumbRadius,
         ),
       ),
     );

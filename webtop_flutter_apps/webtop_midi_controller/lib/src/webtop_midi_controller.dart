@@ -57,6 +57,7 @@ class _WebtopMidiControllerState extends State<WebtopMidiController> {
       child: Builder(builder: (context) {
         final sliderHeight = Hover.getScreenHeightWithScale(0.4, context);
         return Scaffold(
+          backgroundColor: Colors.grey.shade900,
           body: Center(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -67,7 +68,7 @@ class _WebtopMidiControllerState extends State<WebtopMidiController> {
                 children: [
                   CCSliderGroup(
                     interface: client,
-                    color: Colors.grey.shade900,
+                    color: Colors.white70,
                     title: "8080D Distortion",
                     sliderHeight: sliderHeight,
                     sliderData: _sliderGroupParameters,
