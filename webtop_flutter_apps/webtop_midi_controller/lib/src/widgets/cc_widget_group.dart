@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
-import 'package:webtop_midi_controller/src/widgets/cc_button.dart';
+import 'cc_button.dart';
 
 import 'cc_slider.dart';
 import 'cc_widget_parameters.dart';

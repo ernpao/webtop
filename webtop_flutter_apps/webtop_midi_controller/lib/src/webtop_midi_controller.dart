@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
 
-import 'widgets/cc_group.dart';
+import 'widgets/cc_widget_group.dart';
 import 'widgets/cc_widget_parameters.dart';
 
 final MidiClient midiInterface = MidiClient(
