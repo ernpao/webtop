@@ -68,7 +68,7 @@ class _WebtopMidiControllerState extends State<WebtopMidiController> {
                 children: [
                   CCSliderGroup(
                     interface: client,
-                    color: Colors.white70,
+                    color: Colors.white,
                     title: "8080D Distortion",
                     sliderHeight: sliderHeight,
                     sliderData: _sliderGroupParameters,
