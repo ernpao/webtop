@@ -2,34 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
 
-import 'widgets/cc_widget_group.dart';
-import 'widgets/cc_widget_parameters.dart';
+import 'widgets/widgets.dart';
 
-final MidiClient midiInterface = MidiClient(
+final MidiWebAPI midiInterface = MidiWebAPI(
   host: "192.168.100.192",
   socketPort: 6868,
 );
 
 const String targetDevice = "IAC Driver Webtop MIDI";
 
-class WebtopMidiController extends StatefulWidget {
-  WebtopMidiController({Key? key}) : super(key: key);
-  final List<CCWidgetParameters> sliderParameters = [
-    CCWidgetParameters(
+class WebtopMidiControllerApp extends StatefulWidget {
+  WebtopMidiControllerApp({Key? key}) : super(key: key);
+  final List<CCWidgetParametersModel> sliderParameters = [
+    CCWidgetParameters.create(
       targetDevice: targetDevice,
       channel: 1,
       controller: 1,
       value: 0,
       title: "GAIN",
     ),
-    CCWidgetParameters(
+    CCWidgetParameters.create(
       targetDevice: targetDevice,
       channel: 1,
       controller: 2,
       value: 0,
       title: "LEVEL",
     ),
-    CCWidgetParameters(
+    CCWidgetParameters.create(
       targetDevice: targetDevice,
       channel: 1,
       controller: 3,
@@ -38,8 +37,8 @@ class WebtopMidiController extends StatefulWidget {
     ),
   ];
 
-  final List<CCWidgetParameters> switchParameters = [
-    CCWidgetParameters(
+  final List<CCWidgetParametersModel> switchParameters = [
+    CCWidgetParameters.create(
       targetDevice: targetDevice,
       channel: 1,
       controller: 4,
@@ -49,11 +48,12 @@ class WebtopMidiController extends StatefulWidget {
   ];
 
   @override
-  State<WebtopMidiController> createState() => _WebtopMidiControllerState();
+  State<WebtopMidiControllerApp> createState() =>
+      _WebtopMidiControllerAppState();
 }
 
-class _WebtopMidiControllerState extends State<WebtopMidiController> {
-  late List<CCWidgetParameters> _sliderGroupParameters;
+class _WebtopMidiControllerAppState extends State<WebtopMidiControllerApp> {
+  late List<CCWidgetParametersModel> _sliderGroupParameters;
 
   @override
   void initState() {
@@ -64,7 +64,6 @@ class _WebtopMidiControllerState extends State<WebtopMidiController> {
 
   @override
   Widget build(BuildContext context) {
-    // print(_sliderGroupParameters);
     return Application(
       theme: ThemeData.dark(),
       child: Builder(builder: (context) {

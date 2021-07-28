@@ -13,29 +13,29 @@ abstract class CCWidget extends StatelessWidget {
     this.onChanged,
     this.showChannelLabel = true,
     this.showControllerLabel = true,
-    bool sendInitialParameters = false,
+    bool sendOnCreate = false,
   }) : super(key: key) {
-    if (sendInitialParameters) sendValue(parameters.value);
+    if (sendOnCreate) sendValue();
   }
-  final CCWidgetParameters parameters;
+  final CCWidgetParametersModel parameters;
 
-  /// The interface that will be used to send CC messages.
+  /// The interface that will be used to send MIDI CC messages.
   final MidiInterface interface;
 
-  /// Indicates if the CC controller number should be displayed.
+  /// Indicates if the controller number assignment should be displayed.
   final bool showControllerLabel;
 
-  /// Indicates if the CC channel number should be displayed.
+  /// Indicates if the channel number assignment should be displayed.
   final bool showChannelLabel;
 
-  final Function(CCWidgetParameters parameters)? onChanged;
+  final Function(CCWidgetParametersModel parameters)? onChanged;
 
   Widget renderControl(BuildContext context, int value, int min, int max);
 
   /// Copies the parameters of this widget with the exception
   /// of the [value] field set to [newValue].
   CCWidgetParameters copyParametersWithNewValue(int newValue) {
-    return CCWidgetParameters(
+    return CCWidgetParameters.create(
       channel: parameters.channel,
       controller: parameters.controller,
       targetDevice: parameters.targetDevice,
@@ -46,19 +46,12 @@ abstract class CCWidget extends StatelessWidget {
     );
   }
 
-  late final int _min = parameters.min ?? 0;
-  late final int _max = parameters.max ?? 127;
+  late final int _min = parameters.min;
+  late final int _max = parameters.max;
 
-  void sendValue(int value) {
-    interface.sendMidiCC(
-      parameters.targetDevice,
-      ControlChange(
-        channel: parameters.channel,
-        value: parameters.value,
-        controller: parameters.controller,
-      ),
-    );
-  }
+  /// Send a MIDI CC message to the remote host
+  /// with the [parameters] provided.
+  void sendValue() => parameters.sendWithInterface(interface);
 
   Widget _buildLabel(BuildContext context, String text) {
     return Opacity(

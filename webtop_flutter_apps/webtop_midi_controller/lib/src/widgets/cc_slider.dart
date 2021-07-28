@@ -8,12 +8,12 @@ import 'custom_slider.dart';
 class CCSlider extends CCWidget {
   CCSlider({
     Key? key,
-    required CCWidgetParameters parameters,
+    required CCWidgetParametersModel parameters,
     required MidiInterface interface,
     bool showChannelLabel = true,
     bool showControllerLabel = true,
     this.color,
-    Function(CCWidgetParameters parameters)? onChanged,
+    Function(CCWidgetParametersModel parameters)? onChanged,
     this.height = 350,
   }) : super(
           key: key,
@@ -22,7 +22,7 @@ class CCSlider extends CCWidget {
           showChannelLabel: showChannelLabel,
           showControllerLabel: showControllerLabel,
           onChanged: onChanged,
-          sendInitialParameters: true,
+          sendOnCreate: true,
         );
 
   final Color? color;
@@ -38,7 +38,6 @@ class CCSlider extends CCWidget {
       min: min.toDouble(),
       onChanged: (value) {
         final val = value.toInt();
-        debugPrint("MIDI CC Slider value changed: $value");
         onChanged?.call(copyParametersWithNewValue(val));
       },
     );

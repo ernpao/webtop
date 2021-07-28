@@ -10,8 +10,8 @@ class CCWidgetGroup extends StatelessWidget {
   const CCWidgetGroup({
     Key? key,
     required this.interface,
-    required this.sliders,
-    required this.buttons,
+    this.sliders,
+    this.buttons,
     this.color,
     this.title,
     this.onSlidersChanged,
@@ -21,43 +21,48 @@ class CCWidgetGroup extends StatelessWidget {
   final MidiInterface interface;
   final Color? color;
   final String? title;
-  final List<CCWidgetParameters> sliders;
-  final List<CCWidgetParameters> buttons;
-  final Function(List<CCWidgetParameters> sliderData)? onSlidersChanged;
+  final List<CCWidgetParametersModel>? sliders;
+  final List<CCWidgetParametersModel>? buttons;
+  final Function(List<CCWidgetParametersModel> sliderData)? onSlidersChanged;
   final double sliderHeight;
 
   List<CCSlider> _buildSliders() {
     final sliderWidgets = <CCSlider>[];
-    for (final slider in sliders) {
-      sliderWidgets.add(CCSlider(
-        parameters: slider,
-        interface: interface,
-        color: color,
-        height: sliderHeight,
-        onChanged: (parameters) {
-          final data = sliders;
-          int index = data.indexOf(slider);
-          if (index != -1) {
-            data.replaceRange(index, index + 1, [parameters]);
-            onSlidersChanged?.call(data);
-          }
-        },
-      ));
+    if (sliders != null) {
+      for (final slider in sliders!) {
+        sliderWidgets.add(CCSlider(
+          parameters: slider,
+          interface: interface,
+          color: color,
+          height: sliderHeight,
+          onChanged: (parameters) {
+            final data = sliders!;
+            int index = data.indexOf(slider);
+            if (index != -1) {
+              data.replaceRange(index, index + 1, [parameters]);
+              onSlidersChanged?.call(data);
+            }
+          },
+        ));
+      }
     }
     return sliderWidgets;
   }
 
   List<CCButton> _buildButtons() {
     final buttonWidgets = <CCButton>[];
-    for (final button in buttons) {
-      buttonWidgets.add(
-        CCButton(
-          parameters: button,
-          interface: interface,
-          color: color,
-        ),
-      );
+    if (buttons != null) {
+      for (final button in buttons!) {
+        buttonWidgets.add(
+          CCButton(
+            parameters: button,
+            interface: interface,
+            color: color,
+          ),
+        );
+      }
     }
+
     return buttonWidgets;
   }
 

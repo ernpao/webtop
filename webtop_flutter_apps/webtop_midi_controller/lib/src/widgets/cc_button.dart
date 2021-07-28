@@ -7,7 +7,7 @@ import 'cc_widget_parameters.dart';
 class CCButton extends CCWidget {
   CCButton({
     Key? key,
-    required CCWidgetParameters parameters,
+    required CCWidgetParametersModel parameters,
     required MidiInterface interface,
     bool showChannelLabel = true,
     bool showControllerLabel = true,
@@ -29,13 +29,8 @@ class CCButton extends CCWidget {
     return MaterialButton(
       color: color,
       shape: const CircleBorder(),
-      onPressed: () {
-        sendValue(value);
-      },
-      child: const SizedBox(
-        width: _size,
-        height: _size,
-      ),
+      onPressed: sendValue,
+      child: const SizedBox(width: _size, height: _size),
     );
   }
 }
