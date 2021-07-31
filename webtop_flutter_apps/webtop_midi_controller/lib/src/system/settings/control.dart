@@ -3,10 +3,9 @@ import 'package:glider_webtop/glider_webtop.dart';
 
 abstract class Control extends AbstractNode {
   String get type;
-  set type(String type);
 
   String get title;
-  set title(String title);
+  void rename(String title);
 
   static const List<String> types = [
     slider,
@@ -33,14 +32,15 @@ abstract class Control extends AbstractNode {
   static const String bypass = "Bypass";
 }
 
-abstract class ControlNode extends ParseableNode implements Control {
+abstract class ControlNode extends ParseableNode
+    with ChangeNotifier
+    implements Control {
   ControlNode() : super(childParser: null);
 
   @override
   String get type => super.get<String>("type") ?? "";
 
-  @override
-  set type(String type) {
+  void _setType(String type) {
     Control.isValidType(type, throwException: true);
     set("type", type);
   }
@@ -48,8 +48,7 @@ abstract class ControlNode extends ParseableNode implements Control {
   @override
   String get title => identifier;
 
-  @override
-  set title(String title) => identifier = title;
+  void _setTitle(String title) => identifier = title;
 }
 
 class ControlChangeNode extends ControlNode implements ControlChange {
@@ -63,11 +62,11 @@ class ControlChangeNode extends ControlNode implements ControlChange {
     int value,
   ) {
     final node = ControlChangeNode._();
-    node.type = type;
-    node.title = title;
-    node.channel = channel;
-    node.controller = controller;
-    node.value = value;
+    node._setType(type);
+    node._setTitle(title);
+    node._setChannel(channel);
+    node._setController(controller);
+    node._setValue(value);
     return node;
   }
 
@@ -101,17 +100,15 @@ class ControlChangeNode extends ControlNode implements ControlChange {
 
   @override
   int get channel => _getInt(Midi.kChannel);
-  set channel(int c) {
-    _setInt(Midi.kChannel, c);
-  }
+  void _setChannel(int c) => _setInt(Midi.kChannel, c);
 
   @override
   int get controller => _getInt(Midi.kController);
-  set controller(int c) => _setInt(Midi.kController, c);
+  void _setController(int c) => _setInt(Midi.kController, c);
 
   @override
   int get value => _getInt(Midi.kValue);
-  set value(int v) => _setInt(Midi.kValue, v);
+  void _setValue(int v) => _setInt(Midi.kValue, v);
 
   int _getInt(String key) {
     final i = super.get<int>(key);
@@ -135,6 +132,17 @@ class ControlChangeNode extends ControlNode implements ControlChange {
         value: value,
         controller: controller,
       );
+
+  @override
+  void rename(String title) {
+    _setTitle(title);
+    notifyListeners();
+  }
+
+  void updateValue(int value) {
+    _setValue(value);
+    notifyListeners();
+  }
 }
 
 class ControlChangeNodeParser extends NodeParser<ControlChangeNode> {
