@@ -36,16 +36,16 @@ class CCWidgetParameters extends Parseable implements CCWidgetParametersModel {
   }
 
   @override
-  int get channel => this.get("channel");
+  int get channel => this.get(Midi.kChannel);
 
   @override
-  int get controller => this.get("controller");
+  int get controller => this.get(Midi.kController);
 
   @override
-  int get max => this.get("max");
+  int get max => this.get(Midi.kMax);
 
   @override
-  int get min => this.get("min");
+  int get min => this.get(Midi.kMin);
 
   @override
   String get targetDevice => this.get("targetDevice");
@@ -54,7 +54,7 @@ class CCWidgetParameters extends Parseable implements CCWidgetParametersModel {
   String? get title => this.get("title");
 
   @override
-  int get value => this.get("value");
+  int get value => this.get(Midi.kValue);
 
   static CCWidgetParameters create({
     required String targetDevice,
@@ -67,11 +67,11 @@ class CCWidgetParameters extends Parseable implements CCWidgetParametersModel {
   }) {
     final params = CCWidgetParameters();
     params.set("targetDevice", targetDevice);
-    params.set("channel", channel);
-    params.set("controller", controller);
-    params.set("value", value);
-    params.set("min", min ?? 0);
-    params.set("max", max ?? 127);
+    params.set(Midi.kChannel, channel);
+    params.set(Midi.kController, controller);
+    params.set(Midi.kValue, value);
+    params.set(Midi.kMin, min ?? Midi.kMinValue);
+    params.set(Midi.kMax, max ?? Midi.kMaxValue);
     params.set("title", title);
     return params;
   }
@@ -86,22 +86,5 @@ class CCWidgetParameters extends Parseable implements CCWidgetParametersModel {
   @override
   void sendWithInterface(MidiInterface interface) {
     interface.sendMidiCC(targetDevice, toCC());
-  }
-}
-
-class CCWidgetParametersParser extends Parser<CCWidgetParameters> {
-  @override
-  CCWidgetParameters createModel() => CCWidgetParameters();
-
-  @override
-  Map<String, Type>? get typeMap {
-    return {
-      "targetDevice": String,
-      "channel": int,
-      "value": int,
-      "min": int,
-      "max": int,
-      "title": String,
-    };
   }
 }

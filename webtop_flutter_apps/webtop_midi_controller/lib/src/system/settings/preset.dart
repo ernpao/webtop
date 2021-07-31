@@ -12,7 +12,7 @@ abstract class Preset extends AbstractNode {
 }
 
 class PresetNode extends ParseableNode implements Preset {
-  PresetNode() : super(childParser: _moduleNodeParser);
+  PresetNode._() : super(childParser: _moduleNodeParser);
 
   @override
   String get name => identifier;
@@ -30,11 +30,15 @@ class PresetNode extends ParseableNode implements Preset {
   void removeModule(ModuleNode module) => dropChild(module);
 
   static final _moduleNodeParser = ModuleNodeParser();
+  factory PresetNode.createPreset(String name) {
+    final preset = PresetNode._()..name = name;
+    return preset;
+  }
 }
 
 class PresetNodeParser extends NodeParser<PresetNode> {
   @override
-  PresetNode createModel() => PresetNode();
+  PresetNode createModel() => PresetNode._();
 
   @override
   Map<String, Type>? get nodeMap => null;

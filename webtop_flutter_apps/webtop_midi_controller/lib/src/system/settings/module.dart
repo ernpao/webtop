@@ -14,7 +14,7 @@ abstract class Module extends AbstractNode {
 }
 
 class ModuleNode extends ParseableNode implements Module {
-  ModuleNode() : super(childParser: _controlNodeParser);
+  ModuleNode() : super(childParser: _ccNodeParser);
 
   @override
   String get name => identifier;
@@ -23,13 +23,13 @@ class ModuleNode extends ParseableNode implements Module {
   set name(String name) => identifier = name;
 
   @override
-  List<ControlNode> get controls => children.cast<ControlNode>();
+  List<ControlChangeNode> get controls => children.cast<ControlChangeNode>();
 
   @override
-  void addControl(ControlNode control) => adoptChild(control);
+  void addControl(ControlChangeNode control) => adoptChild(control);
 
   @override
-  void removeControl(ControlNode control) => dropChild(control);
+  void removeControl(ControlChangeNode control) => dropChild(control);
 
   @override
   List<Control> getControlsByType(String type) {
@@ -37,7 +37,7 @@ class ModuleNode extends ParseableNode implements Module {
     return controls.where((c) => c.type == type).toList();
   }
 
-  static final _controlNodeParser = ControlNodeParser();
+  static final _ccNodeParser = ControlChangeNodeParser();
 }
 
 class ModuleNodeParser extends NodeParser<ModuleNode> {

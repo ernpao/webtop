@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
 
+import 'system/system.dart';
 import 'widgets/widgets.dart';
 
 final MidiWebAPI midiInterface = MidiWebAPI(
@@ -19,21 +20,21 @@ class WebtopMidiControllerApp extends StatefulWidget {
       channel: 1,
       controller: 1,
       value: 0,
-      title: "GAIN",
+      title: Control.gain.toUpperCase(),
     ),
     CCWidgetParameters.create(
       targetDevice: targetDevice,
       channel: 1,
       controller: 2,
       value: 0,
-      title: "LEVEL",
+      title: Control.level.toUpperCase(),
     ),
     CCWidgetParameters.create(
       targetDevice: targetDevice,
       channel: 1,
       controller: 3,
       value: 0,
-      title: "TONE",
+      title: Control.tone.toUpperCase(),
     ),
   ];
 
