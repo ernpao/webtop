@@ -1,32 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:webtop_midi_controller/src/widgets/cc_widget_parameters.dart';
 import 'package:webtop_midi_controller/webtop_midi_controller.dart';
 
 void main() {
-  test("Webtop MIDI Module Parsing Test", () async {
-    final module = WebtopMidiModule.create(
-      name: "Distortion Module",
-      controls: [
-        WebtopMidiControl.create(
-          CCWidgetParameters.create(
-            targetDevice: targetDevice,
-            channel: 1,
-            controller: 1,
-            value: 0,
-          ),
-          "slider",
-        ),
-      ],
-    );
+  test("Webtop MIDI Settings Parsing Test", () async {
+    final parser = BankNodeParser();
+    final bank = BankNode();
+    bank.name = "Test Bank";
 
-    final preset = WebtopMidiPreset.create(name: "Preset sample");
+    final preset = PresetNode();
+    preset.name = "Test Preset";
+
+    final module = ModuleNode();
+    module.name = "Test Module";
+
+    final slider = ControlNode();
+    slider.type = Control.slider;
+    slider.title = Control.gain;
+
+    module.addControl(slider);
     preset.addModule(module);
-    final encodedPreset = preset.encode();
-    print(encodedPreset);
+    bank.addPreset(preset);
 
-    final parsedPreset = WebtopMidiPresetParser().parse(encodedPreset);
+    final parsedBank = parser.parse(bank.encode());
+    final parsedPreset = parsedBank.presets.first;
+    final parsedModule = parsedPreset.modules.first;
+    final parsedSlider = parsedModule.controls.first;
 
-    assert(parsedPreset.modules.length == 1);
+    assert(parsedBank.presets.first is PresetNode);
+    assert(parsedBank.presets.first.parent != null);
+    assert(parsedBank.presets.first.path == "Test Bank/Test Preset");
+
+    final fetchedSlider = parsedBank.getNode("/Test Preset/Test Module/Gain");
+    assert(fetchedSlider != null);
+    assert(fetchedSlider!.identifier == parsedSlider.identifier);
   });
-  test("Webtop MIDI Settings Parsing Test", () async {});
 }

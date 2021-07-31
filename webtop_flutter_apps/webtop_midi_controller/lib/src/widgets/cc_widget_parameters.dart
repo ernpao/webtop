@@ -31,18 +31,6 @@ abstract class CCWidgetParametersModel {
 
 class CCWidgetParameters extends Parseable implements CCWidgetParametersModel {
   @override
-  Map<String, Type>? get parseMap {
-    return {
-      "targetDevice": String,
-      "channel": int,
-      "value": int,
-      "min": int,
-      "max": int,
-      "title": String,
-    };
-  }
-
-  @override
   String toString() {
     return "Slider State Channel: $channel Controller: $controller Value: $value";
   }
@@ -104,4 +92,16 @@ class CCWidgetParameters extends Parseable implements CCWidgetParametersModel {
 class CCWidgetParametersParser extends Parser<CCWidgetParameters> {
   @override
   CCWidgetParameters createModel() => CCWidgetParameters();
+
+  @override
+  Map<String, Type>? get typeMap {
+    return {
+      "targetDevice": String,
+      "channel": int,
+      "value": int,
+      "min": int,
+      "max": int,
+      "title": String,
+    };
+  }
 }
