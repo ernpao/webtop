@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:webtop_midi_controller/webtop_midi_controller.dart';
+import 'package:webtop_midi_controller/lib.dart';
 
 void main() {
   test("Webtop MIDI Settings Parsing Test", () async {
-    final settings = await WebtopMidiSettings.getSettings();
+    final settings = await SettingsNode.getSettings();
 
     final parser = BankNodeParser();
 

@@ -38,7 +38,6 @@ class BankNode extends ParseableNode implements Bank {
   factory BankNode.createDefaultBank() => BankNode.createBank("Default");
   factory BankNode.createBank(String name) {
     final bank = BankNode._()..name = name;
-
     return bank;
   }
 }

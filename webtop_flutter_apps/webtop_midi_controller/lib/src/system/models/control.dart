@@ -7,6 +7,9 @@ abstract class Control extends AbstractNode {
   String get title;
   void rename(String title);
 
+  int get max;
+  int get min;
+
   static const List<String> types = [
     slider,
     button,
@@ -32,9 +35,7 @@ abstract class Control extends AbstractNode {
   static const String bypass = "Bypass";
 }
 
-abstract class ControlNode extends ParseableNode
-    with ChangeNotifier
-    implements Control {
+abstract class ControlNode extends ParseableNode implements Control {
   ControlNode() : super(childParser: null);
 
   @override
@@ -49,6 +50,11 @@ abstract class ControlNode extends ParseableNode
   String get title => identifier;
 
   void _setTitle(String title) => identifier = title;
+
+  @override
+  void rename(String title) {
+    _setTitle(title);
+  }
 }
 
 class ControlChangeNode extends ControlNode implements ControlChange {
@@ -59,14 +65,18 @@ class ControlChangeNode extends ControlNode implements ControlChange {
     String title,
     int channel,
     int controller,
-    int value,
-  ) {
+    int value, {
+    int? min,
+    int? max,
+  }) {
     final node = ControlChangeNode._();
     node._setType(type);
     node._setTitle(title);
     node._setChannel(channel);
     node._setController(controller);
     node._setValue(value);
+    node._setMin(min ?? Midi.kMinValue);
+    node._setMax(max ?? Midi.kMaxValue);
     return node;
   }
 
@@ -74,28 +84,36 @@ class ControlChangeNode extends ControlNode implements ControlChange {
     String title,
     int channel,
     int controller,
-    int value,
-  ) =>
+    int value, {
+    int? min,
+    int? max,
+  }) =>
       ControlChangeNode._create(
         Control.slider,
         title,
         channel,
         controller,
         value,
+        min: min,
+        max: max,
       );
 
   factory ControlChangeNode.createButton(
     String title,
     int channel,
     int controller,
-    int value,
-  ) =>
+    int value, {
+    int? min,
+    int? max,
+  }) =>
       ControlChangeNode._create(
         Control.button,
         title,
         channel,
         controller,
         value,
+        min: min,
+        max: max,
       );
 
   @override
@@ -127,21 +145,22 @@ class ControlChangeNode extends ControlNode implements ControlChange {
     set(key, i);
   }
 
-  ControlChange toCC() => ControlChange(
-        channel: channel,
-        value: value,
-        controller: controller,
-      );
-
-  @override
-  void rename(String title) {
-    _setTitle(title);
-    notifyListeners();
-  }
-
   void updateValue(int value) {
     _setValue(value);
-    notifyListeners();
+  }
+
+  @override
+  int get min => super.get<int>(Midi.kMin) ?? Midi.kMinValue;
+  void _setMin(int m) => _setInt(Midi.kMin, m);
+  void updateMin(int min) {
+    _setMin(min);
+  }
+
+  @override
+  int get max => super.get<int>(Midi.kMax) ?? Midi.kMaxValue;
+  void _setMax(int m) => _setInt(Midi.kMax, m);
+  void updateMax(int min) {
+    _setMin(min);
   }
 }
 
@@ -156,6 +175,8 @@ class ControlChangeNodeParser extends NodeParser<ControlChangeNode> {
       Midi.kChannel: int,
       Midi.kController: int,
       Midi.kValue: int,
+      Midi.kMax: int,
+      Midi.kMin: int,
     };
   }
 }

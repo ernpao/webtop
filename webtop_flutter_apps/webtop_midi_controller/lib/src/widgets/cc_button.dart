@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 
-import 'cc_widget.dart';
-import 'cc_widget_parameters.dart';
-
-class CCButton extends CCWidget {
+class CCButton extends MidiWidget {
   CCButton({
     Key? key,
-    required CCWidgetParametersModel parameters,
+    required MidiWidgetParameters parameters,
     required MidiInterface interface,
     bool showChannelLabel = true,
     bool showControllerLabel = true,
@@ -18,6 +15,7 @@ class CCButton extends CCWidget {
           parameters: parameters,
           showChannelLabel: showChannelLabel,
           showControllerLabel: showControllerLabel,
+          sendValueOnCreate: false,
         );
 
   final Color? color;

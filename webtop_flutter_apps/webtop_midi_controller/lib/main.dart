@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'webtop_midi_controller.dart';
+import 'lib.dart';
 
 void main() {
-  runApp(WebtopMidiControllerApp());
+  runApp(MidiControllerApp());
 }

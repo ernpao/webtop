@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
-import 'cc_button.dart';
 
+import 'cc_button.dart';
 import 'cc_slider.dart';
-import 'cc_widget_parameters.dart';
 
 class CCWidgetGroup extends StatelessWidget {
   const CCWidgetGroup({
@@ -21,9 +20,9 @@ class CCWidgetGroup extends StatelessWidget {
   final MidiInterface interface;
   final Color? color;
   final String? title;
-  final List<CCWidgetParametersModel>? sliders;
-  final List<CCWidgetParametersModel>? buttons;
-  final Function(List<CCWidgetParametersModel> sliderData)? onSlidersChanged;
+  final List<MidiWidgetParameters>? sliders;
+  final List<MidiWidgetParameters>? buttons;
+  final Function(List<MidiWidgetParameters> sliderData)? onSlidersChanged;
   final double sliderHeight;
 
   List<CCSlider> _buildSliders() {

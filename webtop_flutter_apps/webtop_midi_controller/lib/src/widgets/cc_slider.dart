@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 
-import 'cc_widget.dart';
-import 'cc_widget_parameters.dart';
-import 'custom_slider.dart';
-
-class CCSlider extends CCWidget {
+class CCSlider extends MidiWidget {
   CCSlider({
     Key? key,
-    required CCWidgetParametersModel parameters,
+    required MidiWidgetParameters parameters,
     required MidiInterface interface,
     bool showChannelLabel = true,
     bool showControllerLabel = true,
     this.color,
-    Function(CCWidgetParametersModel parameters)? onChanged,
+    Function(MidiWidgetParameters parameters)? onChanged,
     this.height = 350,
   }) : super(
           key: key,
@@ -22,7 +18,6 @@ class CCSlider extends CCWidget {
           showChannelLabel: showChannelLabel,
           showControllerLabel: showControllerLabel,
           onChanged: onChanged,
-          sendOnCreate: true,
         );
 
   final Color? color;

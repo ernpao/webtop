@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:glider_webtop/glider_webtop.dart';
-
-import 'system/system.dart';
+import 'package:webtop_midi_controller/lib.dart';
+import 'bank.dart';
+import 'preset.dart';
 
 abstract class Settings {
   List<Bank> get banks;
@@ -12,12 +13,12 @@ abstract class Settings {
 
   Preset? get activePreset;
   void switchToPreset(int index);
+
+  void updateControl(covariant Control node);
 }
 
-class WebtopMidiSettings extends ParseableNode
-    with ChangeNotifier
-    implements Settings {
-  WebtopMidiSettings._() : super(childParser: _bankParser) {
+class SettingsNode extends ParseableNode implements Settings {
+  SettingsNode._() : super(childParser: _bankParser) {
     identifier = "Settings";
   }
 
@@ -29,7 +30,7 @@ class WebtopMidiSettings extends ParseableNode
   @override
   BankNode? get activeBank {
     if (banks.isNotEmpty && _activeBankIndex != null) {
-      banks[_activeBankIndex!];
+      return banks[_activeBankIndex!];
     }
   }
 
@@ -38,7 +39,7 @@ class WebtopMidiSettings extends ParseableNode
   @override
   PresetNode? get activePreset {
     if (activeBank != null && _activePresetIndex != null) {
-      activeBank!.presets[_activePresetIndex!];
+      return activeBank!.presets[_activePresetIndex!];
     }
   }
 
@@ -58,7 +59,6 @@ class WebtopMidiSettings extends ParseableNode
   @override
   void switchToBank(int i) {
     _setBank(i);
-    notifyListeners();
   }
 
   void _setPreset(int i) {
@@ -75,14 +75,24 @@ class WebtopMidiSettings extends ParseableNode
   @override
   void switchToPreset(int i) {
     _setPreset(i);
-    notifyListeners();
   }
 
-  static WebtopMidiSettings? _instance;
+  static SettingsNode? _instance;
 
-  static Future<WebtopMidiSettings> getSettings() async {
-    _instance ??= WebtopMidiSettings._();
+  static Future<SettingsNode> getSettings() async {
+    debugPrint("Fetching settings...");
+    _instance ??= SettingsNode._();
     return _instance!;
+  }
+
+  static SettingsNode createMockSettings() {
+    final mockSettings = SettingsNode._();
+
+    final bank = mockSettings.createNewBank();
+    final preset = bank.createNewPreset();
+    preset.addModule(PredefinedModules.distortion);
+
+    return mockSettings;
   }
 
   static const _kActiveBankIndex = "activeBankIndex";
@@ -94,15 +104,20 @@ class WebtopMidiSettings extends ParseableNode
     adoptChild(bank);
     return bank;
   }
+
+  @override
+  void updateControl(ControlNode node) {
+    setNode(node.path, node);
+  }
 }
 
-class SettingsManagerParser extends NodeParser<WebtopMidiSettings> {
+class SettingsNodeParser extends NodeParser<SettingsNode> {
   @override
-  WebtopMidiSettings createModel() => WebtopMidiSettings._();
+  SettingsNode createModel() => SettingsNode._();
 
   @override
   Map<String, Type>? get nodeMap => {
-        WebtopMidiSettings._kActiveBankIndex: int,
-        WebtopMidiSettings._kActivePresetIndex: int,
+        SettingsNode._kActiveBankIndex: int,
+        SettingsNode._kActivePresetIndex: int,
       };
 }

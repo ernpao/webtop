@@ -1,3 +1,3 @@
 library system;
 
-export 'settings/settings.dart';
+export 'models/models.dart';
