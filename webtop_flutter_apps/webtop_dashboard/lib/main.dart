@@ -15,7 +15,7 @@ class WebtopDashboard extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Center(
-          child: BufferSourceImageStream(
+          child: BufferSourceLiveImage(
             interface: WebtopWebAPI(
               host: "192.168.100.191",
               port: 6767,
