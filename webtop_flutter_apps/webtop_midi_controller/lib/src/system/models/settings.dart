@@ -107,7 +107,7 @@ class SettingsNode extends ParseableNode implements Settings {
 
   @override
   void updateControl(ControlNode node) {
-    setNode(node.path, node);
+    updateDescendantByPath(node.path, node);
   }
 }
 

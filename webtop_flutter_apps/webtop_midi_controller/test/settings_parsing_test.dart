@@ -32,8 +32,10 @@ void main() {
     assert(parsedBank.presets.first.parent != null);
     assert(parsedBank.presets.first.path == "Bank 1/Preset 1");
 
-    final fetchedSlider = parsedBank.getNode("/Preset 1/Test Module/Gain");
-    final fetchedButton = parsedBank.getNode("/Preset 1/Test Module/Bypass");
+    final fetchedSlider =
+        parsedBank.findDescendantByPath("/Preset 1/Test Module/Gain");
+    final fetchedButton =
+        parsedBank.findDescendantByPath("/Preset 1/Test Module/Bypass");
     assert(fetchedSlider != null);
     assert(fetchedSlider!.identifier == parsedSlider.title);
     assert(fetchedButton!.identifier == parsedButton.title);
