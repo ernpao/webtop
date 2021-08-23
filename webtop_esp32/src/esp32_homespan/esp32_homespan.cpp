@@ -40,7 +40,7 @@ void esp32_homespan_setup()
     new Characteristic::Version("1.1.0");  // Set the Version Characteristicto "1.1.0" as required by HAP
 
     new DHT11TemperatureSensor();
-    new VirtualSwitchArray();
+    // new VirtualSwitchArray();
 }
 
 void esp32_homespan_loop()
