@@ -1,15 +1,14 @@
+#include <display.h>
+
 #include "esp32_homespan.h"
 #include "dht11_temperature_sensor.h"
 #include "virtual_switch_array.h"
 
+DHT11TemperatureSensor *sensor;
 void esp32_homespan_setup()
 {
 
     Serial.begin(9600);
-
-    dht.begin();
-    pinMode(DHTPIN, INPUT);
-    delay(100);
 
     homeSpan.begin(Category::Sensors, "ESP32 Sensor Hub");
 
@@ -39,11 +38,15 @@ void esp32_homespan_setup()
     new Service::HAPProtocolInformation(); // Create the HAP Protcol Information Service
     new Characteristic::Version("1.1.0");  // Set the Version Characteristicto "1.1.0" as required by HAP
 
-    new DHT11TemperatureSensor();
-    // new VirtualSwitchArray();
+    sensor = new DHT11TemperatureSensor(2);
+    // // new VirtualSwitchArray();
+
+    temperatureWidgetBegin();
 }
 
 void esp32_homespan_loop()
 {
     homeSpan.poll();
+    float temp = sensor->readTemperature();
+    updateTemperatureWidget(temp);
 }

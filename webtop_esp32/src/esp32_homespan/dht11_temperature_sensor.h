@@ -9,15 +9,24 @@
 #define DHTTYPE DHT11
 #define DHTPIN 15
 
-DHT dht(DHTPIN, DHTTYPE);
-
 struct DHT11TemperatureSensor : Service::TemperatureSensor
 {
     SpanCharacteristic *currentTemperature;
+    DHT *dht;
 
-    DHT11TemperatureSensor() : Service::TemperatureSensor()
+    DHT11TemperatureSensor(int pin) : Service::TemperatureSensor()
     {
+        pinMode(pin, INPUT);
+        dht = new DHT(pin, DHTTYPE);
+        dht->begin();
+        delay(100);
+
         currentTemperature = new Characteristic::CurrentTemperature();
+    }
+
+    float readTemperature()
+    {
+        return dht->readTemperature();
     }
 
     void loop()
@@ -31,11 +40,11 @@ struct DHT11TemperatureSensor : Service::TemperatureSensor
 
             // Reading temperature or humidity takes about 250 milliseconds!
             // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-            float h = dht.readHumidity();
+            float h = dht->readHumidity();
             // Read temperature as Celsius (the default)
-            float t = dht.readTemperature();
+            float t = dht->readTemperature();
             // Read temperature as Fahrenheit (isFahrenheit = true)
-            float f = dht.readTemperature(true);
+            float f = dht->readTemperature(true);
 
             // Check if any reads failed and exit early (to try again).
             if (isnan(h) || isnan(t) || isnan(f))
@@ -45,9 +54,9 @@ struct DHT11TemperatureSensor : Service::TemperatureSensor
             }
 
             // Compute heat index in Fahrenheit (the default)
-            float hif = dht.computeHeatIndex(f, h);
+            float hif = dht->computeHeatIndex(f, h);
             // Compute heat index in Celsius (isFahreheit = false)
-            float hic = dht.computeHeatIndex(t, h, false);
+            float hic = dht->computeHeatIndex(t, h, false);
 
             Serial.print(F("Humidity: "));
             Serial.print(h);
