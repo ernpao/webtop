@@ -29,6 +29,30 @@ struct DHT11TemperatureSensor : Service::TemperatureSensor
         return dht->readTemperature();
     }
 
+    float readTemperatureInFahrenheit()
+    {
+        return dht->readTemperature(true);
+    }
+
+    float readHumidity()
+    {
+        return dht->readHumidity();
+    }
+
+    float computeHeatIndexInFahrenheit()
+    {
+        float f = dht->readTemperature(true);
+        float h = dht->readHumidity();
+        return dht->computeHeatIndex(f, h);
+    }
+
+    float computeHeatIndex()
+    {
+        float t = dht->readTemperature();
+        float h = dht->readHumidity();
+        return dht->computeHeatIndex(t, h, false);
+    }
+
     void loop()
     {
         static unsigned long lastReadTime = 0;
