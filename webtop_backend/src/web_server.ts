@@ -5,6 +5,7 @@ import Express from 'express';
 import Desktop = require('./controllers/web_server/desktop')
 import OCR = require('./controllers/web_server/ocr')
 import Routes = require('./controllers/web_server/routes')
+import Tapo = require('./controllers/web_server/tapo')
 
 class WebServer {
     #port: number;
@@ -14,6 +15,7 @@ class WebServer {
     #desktopController = new Desktop();
     #ocrController = new OCR();
     #routesController = new Routes();
+    #tapoController = new Tapo();
 
     constructor(port: number) {
         this.#port = port;
@@ -26,6 +28,8 @@ class WebServer {
         this.#webServer.post('/ocr', this.#ocrController.postOcr)
 
         this.#webServer.get('/desktop/info', this.#desktopController.getDesktopInfo)
+
+        this.#webServer.post('/tapo', this.#tapoController.getToken)
 
         this.#webServer.listen(this.#port)
 
