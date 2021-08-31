@@ -30,6 +30,7 @@ class WebServer {
         this.#webServer.get('/desktop/info', this.#desktopController.getDesktopInfo)
 
         this.#webServer.post('/tapo', this.#tapoController.getToken)
+        this.#webServer.post('/tapo/devices', this.#tapoController.getDeviceList)
 
         this.#webServer.listen(this.#port)
 
