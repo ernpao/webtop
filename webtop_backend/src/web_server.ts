@@ -31,6 +31,9 @@ class WebServer {
 
         this.#webServer.post('/tapo', this.#tapoController.getToken)
         this.#webServer.post('/tapo/devices', this.#tapoController.getDeviceList)
+        this.#webServer.post('/tapo/devices/plug/toggle', this.#tapoController.toggleSmartPlug)
+        this.#webServer.post('/tapo/devices/plug/on', this.#tapoController.turnOnSmartPlug)
+        this.#webServer.post('/tapo/devices/plug/off', this.#tapoController.turnOffSmartPlug)
 
         this.#webServer.listen(this.#port)
 
