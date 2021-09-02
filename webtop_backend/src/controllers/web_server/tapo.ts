@@ -4,27 +4,23 @@ import { Request, Response, NextFunction } from 'express';
 import { cloudLogin, listDevicesByType, loginDevice, loginDeviceByIp, getDeviceInfo, turnOff, turnOn } from 'tp-link-tapo-connect';
 
 
-async function getSmartPlugToken(username: string, password: string, ipAddress: string) {
-    const token = await cloudLogin(username, password);
-    const devices = await listDevicesByType(token, 'SMART.TAPOPLUG');
+async function getDeviceToken(username: string, password: string, ipAddress: string) {
     var deviceToken = await loginDeviceByIp(username, password, ipAddress)
     return deviceToken;
 }
 
-
-
 async function turnOffSmartPlug(username: string, password: string, ipAddress: string) {
-    const token = await getSmartPlugToken(username, password, ipAddress);
+    const token = await getDeviceToken(username, password, ipAddress);
     await turnOff(token);
 }
 
 async function turnOnSmartPlug(username: string, password: string, ipAddress: string) {
-    const token = await getSmartPlugToken(username, password, ipAddress);
+    const token = await getDeviceToken(username, password, ipAddress);
     await turnOn(token);
 }
 
 async function getSmartPlugStatus(username: string, password: string, ipAddress: string) {
-    const token = await getSmartPlugToken(username, password, ipAddress);
+    const token = await getDeviceToken(username, password, ipAddress);
     return (await getDeviceInfo(token)).device_on;
 }
 
@@ -37,9 +33,6 @@ async function toggleSmartPlug(username: string, password: string, ipAddress: st
         await turnOnSmartPlug(username, password, ipAddress);
     }
 }
-
-
-
 class Tapo {
 
     async getToken(req: Request, res: Response) {
