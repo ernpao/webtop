@@ -29,11 +29,11 @@ class WebServer {
 
         this.#webServer.get('/desktop/info', this.#desktopController.getDesktopInfo)
 
-        this.#webServer.post('/tapo', this.#tapoController.getToken)
+        this.#webServer.post('/tapo', this.#tapoController.getDeviceToken)
         this.#webServer.post('/tapo/devices', this.#tapoController.getDeviceList)
-        this.#webServer.post('/tapo/devices/plug/toggle', this.#tapoController.toggleSmartPlug)
-        this.#webServer.post('/tapo/devices/plug/on', this.#tapoController.turnOnSmartPlug)
-        this.#webServer.post('/tapo/devices/plug/off', this.#tapoController.turnOffSmartPlug)
+        this.#webServer.post('/tapo/devices/toggle', this.#tapoController.toggleDevice)
+        this.#webServer.post('/tapo/devices/on', this.#tapoController.turnOnDevice)
+        this.#webServer.post('/tapo/devices/off', this.#tapoController.turnOffdevice)
 
         this.#webServer.listen(this.#port)
 

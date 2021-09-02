@@ -9,37 +9,37 @@ async function getDeviceToken(username: string, password: string, ipAddress: str
     return deviceToken;
 }
 
-async function turnOffSmartPlug(username: string, password: string, ipAddress: string) {
+async function turnOffDevice(username: string, password: string, ipAddress: string) {
     const token = await getDeviceToken(username, password, ipAddress);
     await turnOff(token);
 }
 
-async function turnOnSmartPlug(username: string, password: string, ipAddress: string) {
+async function turnOnDevice(username: string, password: string, ipAddress: string) {
     const token = await getDeviceToken(username, password, ipAddress);
     await turnOn(token);
 }
 
-async function getSmartPlugStatus(username: string, password: string, ipAddress: string) {
+async function getDeviceStatus(username: string, password: string, ipAddress: string) {
     const token = await getDeviceToken(username, password, ipAddress);
     return (await getDeviceInfo(token)).device_on;
 }
 
-async function toggleSmartPlug(username: string, password: string, ipAddress: string) {
+async function toggleDevice(username: string, password: string, ipAddress: string) {
 
-    const plugIsEnabled = await getSmartPlugStatus(username, password, ipAddress);
-    if (plugIsEnabled) {
-        await turnOffSmartPlug(username, password, ipAddress);
+    const deviceIsEnabled = await getDeviceStatus(username, password, ipAddress);
+    if (deviceIsEnabled) {
+        await turnOffDevice(username, password, ipAddress);
     } else {
-        await turnOnSmartPlug(username, password, ipAddress);
+        await turnOnDevice(username, password, ipAddress);
     }
 }
 class Tapo {
 
-    async getToken(req: Request, res: Response) {
-        const { username, password } = req.body
-        const token = await cloudLogin(username, password);
+    async getDeviceToken(req: Request, res: Response) {
+        const { username, password, ip } = req.body
+        const deviceToken = await getDeviceToken(username, password, ip);
         return res.json({
-            token,
+            token: deviceToken,
             success: true,
         });
     }
@@ -54,28 +54,22 @@ class Tapo {
         });
     }
 
-    async toggleSmartPlug(req: Request, res: Response) {
+    async toggleDevice(req: Request, res: Response) {
         const { username, password, ip } = req.body
-        await toggleSmartPlug(username, password, ip)
-        return res.json({
-            success: true,
-        });
+        await toggleDevice(username, password, ip)
+        return res.json({ success: true });
     }
 
-    async turnOffSmartPlug(req: Request, res: Response) {
+    async turnOffdevice(req: Request, res: Response) {
         const { username, password, ip } = req.body
-        await turnOffSmartPlug(username, password, ip)
-        return res.json({
-            success: true,
-        });
+        await turnOffDevice(username, password, ip)
+        return res.json({ success: true });
     }
 
-    async turnOnSmartPlug(req: Request, res: Response) {
+    async turnOnDevice(req: Request, res: Response) {
         const { username, password, ip } = req.body
-        await turnOnSmartPlug(username, password, ip)
-        return res.json({
-            success: true,
-        });
+        await turnOnDevice(username, password, ip)
+        return res.json({ success: true });
     }
 
 }
