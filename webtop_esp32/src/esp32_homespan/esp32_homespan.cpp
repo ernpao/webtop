@@ -41,12 +41,12 @@ void esp32_homespan_setup()
     sensor = new DHT11TemperatureSensor(2);
     // // new VirtualSwitchArray();
 
-    temperatureWidgetBegin();
+    // temperatureWidgetBegin();
 }
 
 void esp32_homespan_loop()
 {
     homeSpan.poll();
-    float temp = sensor->readTemperature();
-    updateTemperatureWidget(temp);
+    // float temp = sensor->readTemperature();
+    // updateTemperatureWidget(temp);
 }
