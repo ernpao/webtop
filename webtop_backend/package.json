@@ -28,6 +28,7 @@
     "nodemon": "^2.0.6",
     "request": "^2.88.2",
     "robotjs": "^0.6.0",
+    "systeminformation": "^5.8.7",
     "tesseract.js": "^2.1.4",
     "tp-link-tapo-connect": "^1.0.4",
     "uuid": "^8.3.2",

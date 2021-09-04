@@ -28,6 +28,9 @@ class WebServer {
         this.#webServer.post('/ocr', this.#ocrController.postOcr)
 
         this.#webServer.get('/desktop/info', this.#desktopController.getDesktopInfo)
+        this.#webServer.get('/desktop/cpu', this.#desktopController.getCpuInfo)
+        this.#webServer.get('/desktop/network', this.#desktopController.getNetworkConnections)
+        this.#webServer.get('/desktop/virtualbox', this.#desktopController.getVirtualBoxInfo)
 
         this.#webServer.post('/tapo', this.#tapoController.getDeviceToken)
         this.#webServer.post('/tapo/devices', this.#tapoController.getDeviceList)
