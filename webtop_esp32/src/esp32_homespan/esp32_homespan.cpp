@@ -1,10 +1,12 @@
 #include <display.h>
 
 #include "esp32_homespan.h"
+#include "dht11_humidity_sensor.h"
 #include "dht11_temperature_sensor.h"
 #include "virtual_switch_array.h"
 
-DHT11TemperatureSensor *sensor;
+DHT11TemperatureSensor *tempSensor;
+DHT11HumiditySensor *humiditySensor;
 void esp32_homespan_setup()
 {
 
@@ -38,7 +40,8 @@ void esp32_homespan_setup()
     new Service::HAPProtocolInformation(); // Create the HAP Protcol Information Service
     new Characteristic::Version("1.1.0");  // Set the Version Characteristicto "1.1.0" as required by HAP
 
-    sensor = new DHT11TemperatureSensor(2);
+    tempSensor = new DHT11TemperatureSensor(2);
+    humiditySensor = new DHT11HumiditySensor(2);
     // // new VirtualSwitchArray();
 
     // temperatureWidgetBegin();
