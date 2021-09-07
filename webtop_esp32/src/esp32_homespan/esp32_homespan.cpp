@@ -1,9 +1,9 @@
 #include <display.h>
 
+#include <dht11_humidity_sensor.h>
+#include <dht11_temperature_sensor.h>
 #include "esp32_homespan.h"
-#include "dht11_humidity_sensor.h"
-#include "dht11_temperature_sensor.h"
-#include "virtual_switch_array.h"
+// #include <virtual_switch_array.h>
 
 DHT11TemperatureSensor *tempSensor;
 DHT11HumiditySensor *humiditySensor;
