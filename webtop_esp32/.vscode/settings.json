@@ -15,6 +15,7 @@
         "utility": "cpp",
         "numeric": "cpp",
         "istream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cmath": "cpp"
     }
 }
