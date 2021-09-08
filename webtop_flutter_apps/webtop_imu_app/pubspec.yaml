@@ -10,6 +10,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  glider_sensors:
+    path: ../glider/glider_sensors
   glider_webtop:
     path: ../glider/glider_webtop
   hover:
