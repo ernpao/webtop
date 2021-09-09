@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:glider_sensors/glider_sensors.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
-import 'package:glider_sensors/glider_sensors.dart';
 
 void main() {
   runApp(const WebtopIMU());
