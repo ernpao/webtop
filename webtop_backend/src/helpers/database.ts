@@ -1,0 +1,55 @@
+require('dotenv').config()
+import moment from "moment";
+const mysql = require('mysql');
+
+export function storeWsData(
+    sender?: string,
+    type?: string,
+    category?: string,
+    topic?: string,
+    body?: string,
+    created?: Date,
+) {
+    const timestamp = (created ? created : new Date());
+    const _created = `'${moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss')}'`;
+    const _sender = sender ? `'${sender}'` : null;
+    const _type = type ? `'${type}'` : null;
+    const _category = category ? `'${category}'` : null;
+    const _topic = topic ? `'${topic}'` : null;
+    const _body = body ? `'${body}'` : null;
+    const queryStr = `INSERT INTO ws_data (sender, type, category, topic, body, created) VALUES (${_sender}, ${_type}, ${_category}, ${_topic}, ${_body}, ${_created})`;
+    query(queryStr, (err: any, results: any, fields: any) => {
+        if (err) {
+            console.log(err)
+        }
+    });
+}
+
+function query(queryString: string, callback?: Function) {
+
+    var _connection = mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME,
+    });
+
+    _connection.connect((err: any) => {
+        console.log("Connecting to the database...");
+        if (err) {
+            console.log(`\n${new Date()}\nAn error occured while attempting to connect to the database: ${err}\n`)
+            if (callback) {
+                callback(err, null, null)
+            }
+        } else {
+            console.log(`\n${new Date()}\nSuccessfully connected to the database.\nRunning query: ${queryString}\n`)
+            _connection.query(queryString, (err: any, results: any, fields: any) => {
+                if (callback) {
+                    callback(err, results, fields)
+                }
+                _connection.end();
+            })
+        }
+    })
+
+}
