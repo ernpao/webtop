@@ -14,7 +14,12 @@ class WebtopIMU extends StatelessWidget {
     host: "192.168.100.191",
     port: 6767,
     socketPort: 6868,
-  )..openSocket();
+  )
+    ..openSocket()
+    ..listen(
+      WebSocketJsonListener(),
+      reopenOnDone: true,
+    );
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,7 @@ class WebtopIMU extends StatelessWidget {
                       ..setProperty("x", accelData?.x)
                       ..setProperty("y", accelData?.y)
                       ..setProperty("z", accelData?.z);
+
                     final gyroDataJson = JSON()
                       ..setProperty("x", accelData?.x)
                       ..setProperty("y", accelData?.y)
@@ -39,6 +45,14 @@ class WebtopIMU extends StatelessWidget {
                     final sensorDataJson = JSON()
                       ..setProperty("accelerometer", accelDataJson)
                       ..setProperty("gyroscope", gyroDataJson);
+
+                    if (_api.isClosed) {
+                      _api.openSocket();
+                      _api.listen(
+                        WebSocketJsonListener(),
+                        reopenOnDone: true,
+                      );
+                    }
 
                     _api.sendImuData(
                       "Realme 5 Pro",
