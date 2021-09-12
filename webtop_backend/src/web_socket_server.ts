@@ -1,6 +1,8 @@
 import WebSocket from 'ws';
 import MIDIController from './controllers/web_socket_server/midi';
 
+import { storeWsData } from './helpers/database';
+
 class WebSocketServer {
     constructor(port: number) {
         this.#port = port;
@@ -81,8 +83,9 @@ class WebSocketServer {
                         break;
                     case "sensor":
                         console.log("Sensor data received from IOT client:");
-                        console.log(message.body);
-                        this.#broadcastToClients(message, client);
+                        // console.log(message.body);
+                        storeWsData(message.sender, message.type, message.category, message.topic, message.body, new Date(message.created))
+                        // this.#broadcastToClients(message, client);
                         break;
                     default:
                         console.log("Data received from IOT client:");
@@ -141,7 +144,7 @@ class WebSocketMessage {
         this.category = category;
         this.topic = topic;
         this.body = body;
-        this.created = created === undefined ? Date.now().toLocaleString() : created;
+        this.created = created === undefined ? (new Date).toUTCString() : created;
     }
 
     static fromJsonString(jsonString: string) {
