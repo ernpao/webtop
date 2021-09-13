@@ -12,7 +12,7 @@ export function storeWsData(
     created?: Date,
 ) {
     const timestamp = (created ? created : new Date());
-    const _created = `'${moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss')}'`;
+    const _created = `'${moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss.SSS')}'`;
     const _sender = sender ? `'${sender}'` : null;
     const _type = type ? `'${type}'` : null;
     const _category = category ? `'${category}'` : null;
