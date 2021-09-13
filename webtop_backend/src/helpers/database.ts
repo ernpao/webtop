@@ -1,5 +1,6 @@
 require('dotenv').config()
 import moment from "moment";
+import { promisify } from "util";
 const mysql = require('mysql');
 
 export function storeWsData(
@@ -23,6 +24,21 @@ export function storeWsData(
             console.log(err)
         }
     });
+}
+
+export async function getWsDataSenders() {
+    var results: any[] = [];
+    var rows: any[] = await promiseQuery("SELECT DISTINCT(sender) FROM ws_data");
+    rows.map(function (row) {
+        results.push(row.sender);
+    })
+    return results;
+}
+
+async function promiseQuery(queryString: string): Promise<any> {
+    const promisifyQuery = promisify(query)
+    const results = await promisifyQuery(queryString);
+    return results;
 }
 
 function query(queryString: string, callback?: Function) {
