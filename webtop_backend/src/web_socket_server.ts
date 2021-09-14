@@ -83,7 +83,7 @@ class WebSocketServer {
                         break;
                     case "sensor":
                         console.log("Sensor data received from IOT client:");
-                        // console.log(message.body);
+                        console.log(message.body);
                         storeWsData(message.sender, message.type, message.category, message.topic, message.body, new Date(message.created))
                         // this.#broadcastToClients(message, client);
                         break;

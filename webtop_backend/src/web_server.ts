@@ -6,6 +6,7 @@ import Desktop = require('./controllers/web_server/desktop')
 import OCR = require('./controllers/web_server/ocr')
 import Routes = require('./controllers/web_server/routes')
 import Tapo = require('./controllers/web_server/tapo')
+import IOT = require('./controllers/web_server/iot')
 
 class WebServer {
     #port: number;
@@ -16,6 +17,7 @@ class WebServer {
     #ocrController = new OCR();
     #routesController = new Routes();
     #tapoController = new Tapo();
+    #iotController = new IOT();
 
     constructor(port: number) {
         this.#port = port;
@@ -37,6 +39,10 @@ class WebServer {
         this.#webServer.post('/tapo/devices/toggle', this.#tapoController.toggleDevice)
         this.#webServer.post('/tapo/devices/on', this.#tapoController.turnOnDevice)
         this.#webServer.post('/tapo/devices/off', this.#tapoController.turnOffdevice)
+
+        this.#webServer.get('/iot/senders', this.#iotController.getWsDataSenders)
+        this.#webServer.get('/iot/dataSet', this.#iotController.getWsDataDataSetData)
+        this.#webServer.get('/iot/dataSets', this.#iotController.getWsDataDataSets)
 
         this.#webServer.listen(this.#port)
 
