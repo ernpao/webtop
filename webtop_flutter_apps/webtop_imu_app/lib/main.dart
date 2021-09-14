@@ -4,22 +4,73 @@ import 'package:glider_webtop/glider_webtop.dart';
 import 'package:hover/hover.dart';
 
 void main() {
-  runApp(WebtopIMU());
+  runApp(const WebtopIMU());
 }
 
-class WebtopIMU extends StatelessWidget {
-  WebtopIMU({Key? key}) : super(key: key);
+class WebtopIMU extends StatefulWidget {
+  const WebtopIMU({Key? key}) : super(key: key);
 
+  @override
+  State<WebtopIMU> createState() => _WebtopIMUState();
+}
+
+class _WebtopIMUState extends State<WebtopIMU> with CreateUUID {
   final _api = IotWebAPI(
     host: "192.168.100.191",
     port: 6767,
     socketPort: 6868,
-  )
-    ..openSocket()
-    ..listen(
+  );
+
+  void _openSocket() {
+    _api.openSocket();
+    _api.listen(
       WebSocketJsonListener(),
       reopenOnDone: true,
     );
+  }
+
+  @override
+  void initState() {
+    _openSocket();
+    super.initState();
+  }
+
+  /// Metadata of the data set for recording.
+  bool _isRecording = false;
+  late String _recordingId = createUuid();
+  late DateTime _recordingCreated = DateTime.now();
+
+  void _resetRecording() {
+    setState(() {
+      _isRecording = false;
+      _recordingId = createUuid();
+      _recordingCreated = DateTime.now();
+    });
+  }
+
+  JSON _getDataSetInfo() {
+    return JSON()
+      ..setProperty("id", _recordingId)
+      ..setProperty("created", _recordingCreated);
+  }
+
+  JSON _getSensorData(AccelerometerEvent? accelData, GyroscopeEvent? gyroData) {
+    final accelDataJson = JSON()
+      ..setProperty("x", accelData?.x)
+      ..setProperty("y", accelData?.y)
+      ..setProperty("z", accelData?.z);
+
+    final gyroDataJson = JSON()
+      ..setProperty("x", accelData?.x)
+      ..setProperty("y", accelData?.y)
+      ..setProperty("z", accelData?.z);
+
+    final sensorDataJson = JSON()
+      ..setProperty("accelerometer", accelDataJson)
+      ..setProperty("gyroscope", gyroDataJson);
+
+    return sensorDataJson;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,49 +83,36 @@ class WebtopIMU extends StatelessWidget {
               builder: (context, accelData, accelControl) {
                 return GyroscopeWidget(
                   builder: (context, gyroData, gyroControl) {
-                    final accelDataJson = JSON()
-                      ..setProperty("x", accelData?.x)
-                      ..setProperty("y", accelData?.y)
-                      ..setProperty("z", accelData?.z);
-
-                    final gyroDataJson = JSON()
-                      ..setProperty("x", accelData?.x)
-                      ..setProperty("y", accelData?.y)
-                      ..setProperty("z", accelData?.z);
-
-                    final sensorDataJson = JSON()
-                      ..setProperty("accelerometer", accelDataJson)
-                      ..setProperty("gyroscope", gyroDataJson);
-
-                    if (_api.isClosed) {
-                      _api.openSocket();
-                      _api.listen(
-                        WebSocketJsonListener(),
-                        reopenOnDone: true,
+                    if (_isRecording) {
+                      _api.sendImuData(
+                        "Realme 5 Pro",
+                        _getDataSetInfo(),
+                        accelerometerX: accelData?.x,
+                        accelerometerY: accelData?.y,
+                        accelerometerZ: accelData?.z,
+                        gyroscopeX: gyroData?.x,
+                        gyroscopeY: gyroData?.y,
+                        gyroscopeZ: gyroData?.z,
                       );
                     }
 
-                    _api.sendImuData(
-                      "Realme 5 Pro",
-                      accelerometerX: accelData?.x,
-                      accelerometerY: accelData?.y,
-                      accelerometerZ: accelData?.z,
-                      gyroscopeX: gyroData?.x,
-                      gyroscopeY: gyroData?.y,
-                      gyroscopeZ: gyroData?.z,
-                    );
-
                     return Column(
                       children: [
-                        Text(
-                          // "Gyroscope Event X: ${gyroData?.x} Y: ${gyroData?.y} Z: ${gyroData?.z}",
-                          sensorDataJson.prettify(),
-                        ),
+                        Text(_getSensorData(accelData, gyroData).prettify()),
                         HoverCallToActionButton(
                           text: "Toggle Monitoring",
                           onPressed: () {
-                            accelControl?.toggleMonitoring();
-                            gyroControl?.toggleMonitoring();
+                            if (_isRecording) {
+                              accelControl?.stopMonitoring();
+                              gyroControl?.stopMonitoring();
+                              _resetRecording();
+                            } else {
+                              accelControl?.monitor();
+                              gyroControl?.monitor();
+                              setState(() {
+                                _isRecording = true;
+                              });
+                            }
                           },
                         )
                       ],
