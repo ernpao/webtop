@@ -51,14 +51,14 @@ function query(queryString: string, callback?: Function) {
     });
 
     _connection.connect((err: any) => {
-        console.log("Connecting to the database...");
+        // console.log("Connecting to the database...");
         if (err) {
             console.log(`\n${new Date()}\nAn error occured while attempting to connect to the database: ${err}\n`)
             if (callback) {
                 callback(err, null, null)
             }
         } else {
-            console.log(`\n${new Date()}\nSuccessfully connected to the database.\nRunning query: ${queryString}\n`)
+            // console.log(`\n${new Date()}\nSuccessfully connected to the database.\nRunning query: ${queryString}\n`)
             _connection.query(queryString, (err: any, results: any, fields: any) => {
                 if (callback) {
                     callback(err, results, fields)
