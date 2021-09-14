@@ -35,6 +35,46 @@ export async function getWsDataSenders() {
     return results;
 }
 
+export async function getWsDataDataSets(sender: string) {
+    var results: any[] = [];
+    var rows: any[] = await promiseQuery(`SELECT body FROM ws_data WHERE sender="${sender}"`);
+    rows.map(function (row) {
+        console.log(row.body)
+        const bodyJson = JSON.parse(row.body)
+        const dataSetId = bodyJson.dataSet.id;
+        if (!results.includes(dataSetId)) {
+            results.push(dataSetId);
+        }
+    })
+    return results;
+}
+
+export async function getWsDataDataSetData(sender: string, dataSetId: string) {
+    var results: any[] = [];
+    var rows: any[] = await promiseQuery(`SELECT body, created FROM ws_data WHERE sender="${sender}" AND body LIKE "%${dataSetId}%" ORDER BY created ASC`);
+    rows.map(function (row) {
+        const bodyJson = JSON.parse(row.body)
+        const created = row.created
+        const accelData = bodyJson.accelerometer;
+        const gyroData = bodyJson.gyroscope;
+        results.push({
+            timestamp: created,
+            accelerometer: {
+                x: accelData.x,
+                y: accelData.y,
+                z: accelData.z
+            },
+            gyroscope: {
+                x: gyroData.x,
+                y: gyroData.y,
+                z: gyroData.z
+            }
+        });
+    })
+    return results;
+}
+
+
 async function promiseQuery(queryString: string): Promise<any> {
     const promisifyQuery = promisify(query)
     const results = await promisifyQuery(queryString);
