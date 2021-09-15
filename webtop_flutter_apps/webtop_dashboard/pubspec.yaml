@@ -12,6 +12,8 @@ dependencies:
   cupertino_icons: ^1.0.0
   glider_webtop:
     path: ../glider/glider_webtop
+  hover:
+    path: ../glider/hover
 
 dev_dependencies:
   flutter_test:
