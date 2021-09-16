@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
+import 'package:hover/hover.dart';
 
 void main() {
   runApp(WebtopDashboard());
@@ -11,20 +12,23 @@ class WebtopDashboard extends StatelessWidget {
     return Application(
       useMaterialAppWidget: true,
       providers: [],
-      theme: ThemeData.dark(),
+      theme: HoverThemeData.dark.data,
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Center(
-          child: BufferSourceLiveImage(
-            interface: WebtopWebAPI(
-              host: "192.168.100.191",
-              port: 6767,
-              socketPort: 6868,
-            ),
-            width: 320,
-            height: 240,
-          ),
+        body: Column(
+          children: [],
         ),
+        // body: Center(
+        //   child: BufferSourceLiveImage(
+        //     interface: WebtopWebAPI(
+        //       host: "192.168.100.191",
+        //       port: 6767,
+        //       socketPort: 6868,
+        //     ),
+        //     width: 320,
+        //     height: 240,
+        //   ),
+        // ),
       ),
     );
   }
