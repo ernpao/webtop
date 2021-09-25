@@ -33,6 +33,7 @@ class WebServer {
         this.#webServer.get('/desktop/cpu', this.#desktopController.getCpuInfo)
         this.#webServer.get('/desktop/network', this.#desktopController.getNetworkConnections)
         this.#webServer.get('/desktop/virtualbox', this.#desktopController.getVirtualBoxInfo)
+        this.#webServer.post('/desktop/graphics/restart', this.#desktopController.restartGraphicsDriver)
 
         this.#webServer.post('/tapo', this.#tapoController.getDeviceToken)
         this.#webServer.post('/tapo/devices', this.#tapoController.getDeviceList)
