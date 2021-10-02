@@ -36,40 +36,80 @@ async function toggleDevice(username: string, password: string, ipAddress: strin
 class Tapo {
 
     async getDeviceToken(req: Request, res: Response) {
-        const { username, password, ip } = req.body
-        const deviceToken = await getDeviceToken(username, password, ip);
-        return res.json({
-            token: deviceToken,
-            success: true,
-        });
+        try {
+            const { username, password, ip } = req.body
+            const deviceToken = await getDeviceToken(username, password, ip);
+            return res.json({
+                token: deviceToken,
+                success: true,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error,
+                success: false,
+            });
+        }
     }
 
     async getDeviceList(req: Request, res: Response) {
-        const { username, password } = req.body
-        const token = await cloudLogin(username, password);
-        const devices = await listDevicesByType(token, 'SMART.TAPOPLUG');
-        return res.json({
-            devices,
-            success: true,
-        });
+        try {
+            const { username, password } = req.body
+            const token = await cloudLogin(username, password);
+            const devices = await listDevicesByType(token, 'SMART.TAPOPLUG');
+            return res.json({
+                devices,
+                success: true,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error,
+                success: false,
+            });
+        }
     }
 
     async toggleDevice(req: Request, res: Response) {
-        const { username, password, ip } = req.body
-        await toggleDevice(username, password, ip)
-        return res.json({ success: true });
+        try {
+            const { username, password, ip } = req.body
+            await toggleDevice(username, password, ip)
+            return res.json({ success: true });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error,
+                success: false,
+            });
+        }
     }
 
     async turnOffdevice(req: Request, res: Response) {
-        const { username, password, ip } = req.body
-        await turnOffDevice(username, password, ip)
-        return res.json({ success: true });
+        try {
+            const { username, password, ip } = req.body
+            await turnOffDevice(username, password, ip)
+            return res.json({ success: true });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error,
+                success: false,
+            });
+        }
     }
 
     async turnOnDevice(req: Request, res: Response) {
-        const { username, password, ip } = req.body
-        await turnOnDevice(username, password, ip)
-        return res.json({ success: true });
+        try {
+            const { username, password, ip } = req.body
+            await turnOnDevice(username, password, ip)
+            return res.json({ success: true });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error,
+                success: false,
+            });
+        }
     }
 
 }
