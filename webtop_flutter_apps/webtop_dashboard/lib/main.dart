@@ -12,23 +12,23 @@ class WebtopDashboard extends StatelessWidget {
     return Application(
       useMaterialAppWidget: true,
       providers: [],
-      theme: HoverThemeData.dark.data,
+      theme: HoverThemeData.light.data,
       child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Column(
-          children: [],
-        ),
-        // body: Center(
-        //   child: BufferSourceLiveImage(
-        //     interface: WebtopWebAPI(
-        //       host: "192.168.100.191",
-        //       port: 6767,
-        //       socketPort: 6868,
-        //     ),
-        //     width: 320,
-        //     height: 240,
-        //   ),
+        // backgroundColor: Colors.black,
+        // body: Column(
+        //   children: [],
         // ),
+        body: Center(
+          child: BufferSourceLiveImage(
+            interface: WebtopWebAPI(
+              host: "192.168.100.191",
+              port: 6767,
+              socketPort: 6868,
+            ),
+            width: 320,
+            height: 240,
+          ),
+        ),
       ),
     );
   }
