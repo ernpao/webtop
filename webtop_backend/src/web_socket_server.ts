@@ -24,7 +24,7 @@ class WebSocketServer {
     #setupWebSocket(socket: WebSocket) {
         socket.on('message', (message) => {
             if (Buffer.isBuffer(message)) {
-                this.#processBufferTypeMessage(message, socket);
+                this.#processBufferMessage(message, socket);
             } else {
                 this.#processSocketMessage(message.toString(), socket);
             }
@@ -40,14 +40,14 @@ class WebSocketServer {
         });
     }
 
-    #processBufferTypeMessage(buffer: Buffer, socket: WebSocket) {
+    #processBufferMessage(buffer: Buffer, socket: WebSocket) {
         this.#wss.clients.forEach((client) => {
             var clientIsOpen = client.readyState === WebSocket.OPEN;
             if (client != socket && clientIsOpen) {
                 const body = JSON.stringify(buffer);
 
                 let webSocketMessage = new WebSocketMessage(
-                    "Buffer Source",
+                    "Webtop Buffer Source",
                     undefined,
                     undefined,
                     undefined,
@@ -84,8 +84,8 @@ class WebSocketServer {
                     case "sensor":
                         console.log("Sensor data received from IOT client:");
                         console.log(message.body);
+                        this.#broadcastToClients(message, client);
                         storeWsData(message.sender, message.type, message.category, message.topic, message.body, new Date(message.created))
-                        // this.#broadcastToClients(message, client);
                         break;
                     default:
                         console.log("Data received from IOT client:");
@@ -95,13 +95,12 @@ class WebSocketServer {
                 break;
             case "midi":
                 console.log("MIDI command received:");
-                let body = JSON.parse(message.body);
-                console.log(body);
+                let midiMessage = JSON.parse(message.body);
+                console.log(midiMessage);
                 switch (message.category) {
                     case "cc":
-                        // let midi = new MIDIController("IAC Driver Webtop MIDI");
-                        let midi = new MIDIController(body.name);
-                        midi.sendCC(body.controller, body.value, body.channel);
+                        let midi = new MIDIController(midiMessage.name);
+                        midi.sendCC(midiMessage.controller, midiMessage.value, midiMessage.channel);
                         break;
                     default:
                         break;
