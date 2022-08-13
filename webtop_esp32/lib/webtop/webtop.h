@@ -78,8 +78,9 @@ public:
         webSocket.sendTXT("{\"_ws_type\":\"esp32\", \"_ws_data\": \"" + body + "\", \"_ws_topic\": \"" + topic + "\"}");
     }
 
-    void sendBinToSocket(uint8_t *payload, size_t length, bool headerToPayload = false)
+    void sendBinToSocket(uint8_t *payload, size_t length)
     {
+        bool headerToPayload = false;
         webSocket.sendBIN(payload, length, headerToPayload);
     }
 
