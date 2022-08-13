@@ -14,12 +14,8 @@ class WebtopDashboard extends StatelessWidget {
       providers: [],
       theme: HoverThemeData.light.data,
       child: Scaffold(
-        // backgroundColor: Colors.black,
-        // body: Column(
-        //   children: [],
-        // ),
         body: Center(
-          child: BufferSourceLiveImage(
+          child: WebtopLiveImage(
             interface: WebtopWebAPI(
               host: "192.168.100.191",
               port: 6767,

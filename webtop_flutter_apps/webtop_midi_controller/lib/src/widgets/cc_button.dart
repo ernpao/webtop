@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 
-class CCButton extends MidiWidget {
+class CCButton extends WebtopMidiWidget {
   CCButton({
     Key? key,
     required MidiWidgetParameters parameters,

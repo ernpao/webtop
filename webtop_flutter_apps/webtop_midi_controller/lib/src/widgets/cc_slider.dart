@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glider_webtop/glider_webtop.dart';
 
-class CCSlider extends MidiWidget {
+class CCSlider extends WebtopMidiWidget {
   CCSlider({
     Key? key,
     required MidiWidgetParameters parameters,
