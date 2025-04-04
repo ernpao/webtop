@@ -9,7 +9,8 @@ import Routes = require('./controllers/web_server/routes')
 import Tapo = require('./controllers/web_server/tapo')
 import IOT = require('./controllers/web_server/iot')
 import StableDiffusion = require('./controllers/web_server/sd')
-import Ollama = require('./controllers/web_server/Ollama')
+import Ollama = require('./controllers/web_server/ollama')
+import Gemini = require('./controllers/web_server/gemini')
 
 class WebServer {
     #port: number;
@@ -23,6 +24,7 @@ class WebServer {
     #iotController = new IOT();
     #sdController = new StableDiffusion();
     #ollamaController = new Ollama();
+    #geminiController = new Gemini();
 
     constructor(port: number) {
         this.#port = port;
@@ -63,8 +65,10 @@ class WebServer {
         this.#webServer.post('/stable-diffusion/process', this.#sdController.process)
 
         this.#webServer.get('/ollama', this.#ollamaController.index)
-
         this.#webServer.post('/ollama/generateRemote', this.#ollamaController.generateRemote)
+
+        
+        this.#webServer.post('/gemini/generateContent', this.#geminiController.generateContent)
 
         this.#webServer.listen(this.#port)
 
