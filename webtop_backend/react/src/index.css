@@ -1,0 +1,61 @@
+/* Import Tailwind base, components, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+body {
+  /* Ensure smooth scrolling works nicely */
+  @apply antialiased;
+}
+
+/* Webkit (Chrome, Safari, Edge) scrollbar styling */
+.chat-container::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: transparent; /* Make track invisible */
+  /* Or a subtle background: */
+  /* background: #f1f1f1; */
+  /* @apply dark:bg-gray-800; */
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #cccccc; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Roundness of the thumb */
+  border: 2px solid transparent; /* Creates padding around thumb */
+  background-clip: content-box; /* Ensures border creates padding effect */
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background-color: #aaaaaa; /* Color on hover */
+}
+
+/* Dark mode scrollbar styles */
+.dark .chat-container::-webkit-scrollbar-thumb {
+   background-color: #555555; /* Darker thumb for dark mode */
+}
+
+.dark .chat-container::-webkit-scrollbar-thumb:hover {
+   background-color: #777777; /* Darker hover for dark mode */
+}
+
+
+/* Firefox scrollbar styling (simpler options) */
+/* Use @supports if you only want these for Firefox */
+.chat-container {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: #cccccc transparent; /* thumb color track color */
+}
+
+.dark .chat-container {
+   scrollbar-color: #555555 transparent; /* Dark mode thumb */
+}
+
+
+/* Optional: Basic textarea auto-height (very simple version) */
+/* For more robust auto-resizing, a small JS snippet or library is better */
+/* textarea { */
+  /* field-sizing: content; */ /* New CSS property, not fully supported everywhere yet */
+/* } */

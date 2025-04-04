@@ -64,35 +64,15 @@ class Desktop {
         });
     }
 
-    async restartGraphicsDriver(req: Request, res: Response) {
+    async restartWindowsGraphicsDriver(req: Request, res: Response) {
         try {
-            /// TODO: Restarting the graphics driver via keyboard keystrokes
-            /// is still unreliable.
-            Robotjs.setKeyboardDelay(80)
-            Robotjs.keyToggle("control", "down");
-            Robotjs.keyToggle("shift", "down");
-            Robotjs.keyToggle("command", "down");
-            Robotjs.keyToggle("b", "down");
-            Robotjs.keyToggle("b", "up");
-            Robotjs.keyToggle("command", "up");
-            Robotjs.keyToggle("shift", "up");
-            Robotjs.keyToggle("control", "up");
 
+            Robotjs.keyTap("b", ['command', 'shift', 'control'])
+            
             return res.json({
                 success: true,
             });
-            
-            // Robotjs.setKeyboardDelay(10)
-            // const token = process.env.OC_TUNE_AUTH_TOKEN
-            // const result = await axios.get("http://localhost:18000/restart.driver.nvidia", {
-            //     "headers": {
-            //         "Authorization": token
-            //     }
-            // })
-            // return res.json({
-            //     success: true,
-            //     result,
-            // });
+
         } catch (err) {
             console.log(err)
             return res.status(400).json({
@@ -100,6 +80,15 @@ class Desktop {
                 error: err,
             });
         }
+    }
+
+    async getTemperatureInfo(req: Request, res: Response) {
+        const cpu = await si.cpu();
+        const cpuTemperature = await si.cpuTemperature();
+        return res.json({
+            cpuTemperature,
+            success: true,
+        });
     }
 }
 

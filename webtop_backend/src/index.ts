@@ -6,5 +6,5 @@ let wsPort = parseInt(process.env.PORT == undefined ? '' : process.env.PORT)
 let wssPort = parseInt(process.env.WEBSOCKET_PORT == undefined ? '' : process.env.WEBSOCKET_PORT)
 
 new WebServer(wsPort)
-new WebSocketServer(wssPort)
+// new WebSocketServer(wssPort)
 

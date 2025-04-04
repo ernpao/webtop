@@ -15,15 +15,16 @@ class WebtopDashboard extends StatelessWidget {
       theme: HoverThemeData.light.data,
       child: Scaffold(
         body: Center(
-          child: WebtopLiveImage(
-            interface: WebtopWebAPI(
-              host: "192.168.100.191",
-              port: 6767,
-              socketPort: 6868,
-            ),
-            width: 320,
-            height: 240,
-          ),
+          // child: WebtopLiveImage(
+          //   interface: WebtopWebAPI(
+          //     host: "192.168.100.191",
+          //     port: 6767,
+          //     socketPort: 6868,
+          //   ),
+          //   width: 320,
+          //   height: 240,
+          // ),
+          child: Text('Test'),
         ),
       ),
     );
