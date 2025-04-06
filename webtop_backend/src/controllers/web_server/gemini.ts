@@ -39,7 +39,7 @@ class Gemini {
             });
 
             // console.log(response.text);
-            res.status(200).json(response.text);
+            res.status(200).json(response);
 
         } catch (error) {
 

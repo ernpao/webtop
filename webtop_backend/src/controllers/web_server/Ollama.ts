@@ -35,7 +35,6 @@ class Ollama {
 
 
     index(req: Request, res: Response) {
-        // res.sendFile(path.join(__dirname, '../../../react/build/index.html'))
         return res.json({
             success: true,
             message: "Ollama"
