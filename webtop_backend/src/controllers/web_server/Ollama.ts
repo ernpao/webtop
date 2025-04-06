@@ -1,3 +1,4 @@
+require('dotenv').config()
 import { Request, Response, NextFunction } from 'express';
 
 const Tesseract = require('tesseract.js')
@@ -56,7 +57,7 @@ class Ollama {
             }
 
             // Remote server URL (replace with actual API endpoint)
-            const remoteApiUrl = "http://192.168.50.11:11434/api/generate";
+            const remoteApiUrl = `http://${process.env.WEBSOCKET_PORT}/api/generate`;
 
             // Send the POST request to the remote server
             const response = await axios.post<GenerateResponse>(remoteApiUrl, requestBody, {
