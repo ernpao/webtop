@@ -1,0 +1,39 @@
+{
+    "uuid": "",
+    "resource_type": "storyboard",
+    "title": "",
+    "characters": [
+        {
+            "uuid": "",
+            "resource_type": "character",
+            "name": "",
+            "description": "",
+            "notes": {
+                "uuid": "",
+                "resource_type": "note",
+                "title": "",
+                "text": ""
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "name": "Scene 1",
+            "description": "This is a description",
+            "boards": [
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 1",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                }
+            ]
+        }
+    ]
+}

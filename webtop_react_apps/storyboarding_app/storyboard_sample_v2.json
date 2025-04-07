@@ -1,0 +1,231 @@
+{
+    "uuid": "",
+    "resource_type": "storyboard",
+    "title": "",
+    "characters": [
+        {
+            "uuid": "char 1",
+            "resource_type": "character",
+            "name": "Alice",
+            "description": "",
+            "notes": {
+                "uuid": "",
+                "resource_type": "note",
+                "title": "",
+                "text": ""
+            }
+        },
+        {
+            "uuid": "char 2",
+            "resource_type": "character",
+            "name": "James",
+            "description": "",
+            "notes": {
+                "uuid": "",
+                "resource_type": "note",
+                "title": "",
+                "text": ""
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "name": "Scene 1",
+            "description": "This is a description",
+            "boards": [
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 1",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 2",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 3",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 4",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 5",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Scene 2",
+            "description": "This is a description",
+            "boards": [
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 1",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 2",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 3",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 4",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 5",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Scene 3",
+            "description": "This is a description",
+            "boards": [
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 1",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 2",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 3",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 4",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                },
+                {
+                    "uuid": "",
+                    "resource_type": "board",
+                    "title": "Board 5",
+                    "image": "",
+                    "notes": {
+                        "uuid": "",
+                        "resource_type": "note",
+                        "title": "",
+                        "text": ""
+                    }
+                }
+            ]
+        }
+    ]
+}
