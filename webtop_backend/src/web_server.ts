@@ -11,6 +11,7 @@ import IOT = require('./controllers/web_server/iot')
 import StableDiffusion = require('./controllers/web_server/sd')
 import Ollama = require('./controllers/web_server/ollama')
 import Gemini = require('./controllers/web_server/gemini')
+import Thumbnail = require('./controllers/web_server/thumbnail')
 
 class WebServer {
     #port: number;
@@ -25,11 +26,12 @@ class WebServer {
     #sdController = new StableDiffusion();
     #ollamaController = new Ollama();
     #geminiController = new Gemini();
+    #thumbnailController = new Thumbnail();
 
     constructor(port: number) {
         this.#port = port;
         this.#webServer = Express();
-        this.#webServer.use(Express.json())
+        this.#webServer.use(Express.json({ limit: '10mb' }))
         this.#webServer.use(Express.static(__dirname + '/html'));
 
         var cors = require('cors')
@@ -67,8 +69,9 @@ class WebServer {
         this.#webServer.get('/ollama', this.#ollamaController.index)
         this.#webServer.post('/ollama/generateRemote', this.#ollamaController.generateRemote)
 
-        
         this.#webServer.post('/gemini/generateContent', this.#geminiController.generateContent)
+
+        this.#webServer.post('/thumbnail', this.#thumbnailController.changeThumbnail)
 
         this.#webServer.listen(this.#port)
 

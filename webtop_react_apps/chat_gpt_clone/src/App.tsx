@@ -47,7 +47,8 @@ export default function App() {
     const requestBody = { prompt: currentPrompt, ...(context && { context }) };
 
     try {
-      const res = await fetch('http://192.168.50.10:6767/ollama/generateRemote', {
+      // const res = await fetch('//192.168.50.10:6767/ollama/generateRemote', {
+      const res = await fetch('//192.168.50.10:10239/ollama-generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
@@ -103,10 +104,10 @@ export default function App() {
             <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div
                 className={`max-w-[85%] md:max-w-[75%] rounded-lg shadow-sm break-words text-sm md:text-base p-3 ${message.type === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : message.type === 'ai'
-                      ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                      : 'bg-red-100 dark:bg-red-900/50 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300'
+                  ? 'bg-blue-500 text-white'
+                  : message.type === 'ai'
+                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                    : 'bg-red-100 dark:bg-red-900/50 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300'
                   }`}
               >
                 <MarkdownRenderer content={message.text} />

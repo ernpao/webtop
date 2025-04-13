@@ -57,7 +57,7 @@ class Ollama {
             }
 
             // Remote server URL (replace with actual API endpoint)
-            const remoteApiUrl = `http://${process.env.WEBSOCKET_PORT}/api/generate`;
+            const remoteApiUrl = `http://${process.env.OLLAMA_SERVER_IP}:11434/api/generate`;
 
             // Send the POST request to the remote server
             const response = await axios.post<GenerateResponse>(remoteApiUrl, requestBody, {
