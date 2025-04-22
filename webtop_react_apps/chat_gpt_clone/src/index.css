@@ -3,59 +3,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
-body {
-  /* Ensure smooth scrolling works nicely */
-  @apply antialiased;
-}
-
-/* Webkit (Chrome, Safari, Edge) scrollbar styling */
-.chat-container::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-}
-
-.chat-container::-webkit-scrollbar-track {
-  background: transparent; /* Make track invisible */
-  /* Or a subtle background: */
-  /* background: #f1f1f1; */
-  /* @apply dark:bg-gray-800; */
-}
-
-.chat-container::-webkit-scrollbar-thumb {
-  background-color: #cccccc; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Roundness of the thumb */
-  border: 2px solid transparent; /* Creates padding around thumb */
-  background-clip: content-box; /* Ensures border creates padding effect */
-}
-
-.chat-container::-webkit-scrollbar-thumb:hover {
-  background-color: #aaaaaa; /* Color on hover */
-}
-
-/* Dark mode scrollbar styles */
-.dark .chat-container::-webkit-scrollbar-thumb {
-   background-color: #555555; /* Darker thumb for dark mode */
-}
-
-.dark .chat-container::-webkit-scrollbar-thumb:hover {
-   background-color: #777777; /* Darker hover for dark mode */
-}
-
-
-/* Firefox scrollbar styling (simpler options) */
-/* Use @supports if you only want these for Firefox */
-.chat-container {
-  scrollbar-width: thin; /* "auto" or "thin" */
-  scrollbar-color: #cccccc transparent; /* thumb color track color */
-}
-
-.dark .chat-container {
-   scrollbar-color: #555555 transparent; /* Dark mode thumb */
-}
-
-
 /* Optional: Basic textarea auto-height (very simple version) */
 /* For more robust auto-resizing, a small JS snippet or library is better */
 /* textarea { */
-  /* field-sizing: content; */ /* New CSS property, not fully supported everywhere yet */
+/* field-sizing: content; */
+/* New CSS property, not fully supported everywhere yet */
 /* } */
+
+.code-block {
+  margin: 1.5rem 0;
+}
+
+.markdown>p {
+  display: inline-block;
+  margin: 8px 0;
+}
+
+.markdown *:not(.code-block) code {
+  font-family: Inconsolata, Monaco, Consolas, "Courier New", Courier, monospace;
+  font-size: 0.875rem;
+  display: inline-block;
+  color: rgb(197, 200, 198);
+  background-color: rgb(29, 31, 33);
+  padding: 0.25rem 0.5rem;
+  margin: 0 0.125rem;
+  border-radius: 0.3em;
+
+}
+
+.markdown ul {
+  list-style: disc;
+  margin: 1rem 0;
+}
+
+.markdown ul li:first-child {}
+
+.markdown ul li:last-child {}
+
+.markdown ul li {
+  margin-left: 2rem;
+  margin-bottom: 0.6rem;
+}
