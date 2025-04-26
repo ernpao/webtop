@@ -2,26 +2,28 @@ import { Box, Card, Container, FormControl, InputLabel, MenuItem, Select, Select
 import { useEffect, useState } from 'react';
 
 
-interface ModelSelectorProps {
-    onModelChanged: (modelName: string) => void;
+const API_ENDPOINT = '//192.168.50.10:11434/api/tags'
+
+type ModelInfo = {
+    name: string,
+    model: string,
+    modified_at: Date,
+    size: number
 }
 
 type ApiResponse = {
-    models: [Model];
+    models: [ModelInfo];
 };
 
-type Model = {
-    name: string,
-    model: string,
-    modeified_at: Date,
-    size: number
+interface ModelSelectorProps {
+    onModelChanged: (modelName: string) => void;
 }
 
 const ModelSelector = ({ onModelChanged }: ModelSelectorProps) => {
 
     const [model, setModel] = useState("llama3.1")
     const [isLoading, setLoading] = useState(true)
-    const [modelList, setModelList] = useState<[Model]>()
+    const [modelList, setModelList] = useState<[ModelInfo]>()
 
 
     const getModelNameByIndex = (index: number): string => {
@@ -31,7 +33,7 @@ const ModelSelector = ({ onModelChanged }: ModelSelectorProps) => {
     const getModels = async () => {
         try {
             // const res = await fetch('//192.168.50.10:6767/ollama/generateRemote', {
-            const res = await fetch('//192.168.50.10:11434/api/tags', {
+            const res = await fetch(API_ENDPOINT, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -65,7 +67,6 @@ const ModelSelector = ({ onModelChanged }: ModelSelectorProps) => {
         <Box
             sx={{
                 m: 2,
-                p: 2,
             }}>
             <FormControl fullWidth>
                 <InputLabel id="model-selector-label">Select Model:</InputLabel>

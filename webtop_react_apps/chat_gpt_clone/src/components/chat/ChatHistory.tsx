@@ -1,5 +1,5 @@
-import { Box, Card, Typography, CircularProgress, useTheme } from "@mui/material";
-import ChatMessage from "../types/ChatMessage";
+import { Box, Card, Typography, useTheme } from "@mui/material";
+import ChatMessage from "../../types/ChatMessage";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 interface ChatHistoryProps {
@@ -29,9 +29,9 @@ function ChatBubble({ messageType, message, className }: ChatBubbleProps) {
             <Card className={className}
                 elevation={messageType === "ai" ? 3 : 3}
                 sx={{
-                    maxWidth: "65%",
-                    px: 3,
-                    py: 2,
+                    maxWidth: "85%",
+                    px: 2,
+                    py: 1,
                     backgroundColor:
                         messageType === "user"
                             ? userBubbleColor
@@ -67,7 +67,7 @@ export default function ChatHistory({ messages, loading, ref }: ChatHistoryProps
                 overflowY: "auto",
                 gap: 4,
                 scrollBehavior: "smooth",
-                p: { xs: 4, md: 6 },
+                p: { xs: 3, md: 4.5 },
             }}
         >
             {messages.length === 0 && (
@@ -76,7 +76,7 @@ export default function ChatHistory({ messages, loading, ref }: ChatHistoryProps
                     align="center"
                     sx={{
                         color: theme.palette.mode === "dark" ? "grey.400" : "grey.500",
-                        mt: 8,
+                        // mt: 8,
                     }}
                 >
                     Start a conversation by typing below. Press Enter to send, Shift+Enter for a new line.

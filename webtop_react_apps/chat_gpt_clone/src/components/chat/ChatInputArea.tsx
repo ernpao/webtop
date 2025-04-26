@@ -23,8 +23,9 @@ const ChatInputArea = ({ value, ref, disabled, onSend, onChange }: ChatInputArea
         <Card
             elevation={3}
             sx={{
-                m: 2,
-                p: 2,
+                m: 1.5,
+                px: 1,
+                py: { xs: 2, md: 1.5 },
                 display: 'flex',
                 alignItems: 'center',
             }}
@@ -35,7 +36,7 @@ const ChatInputArea = ({ value, ref, disabled, onSend, onChange }: ChatInputArea
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Type your message... (Enter to send, Shift+Enter for newline)"
+                placeholder="Enter to send, Shift+Enter for newline"
                 disabled={disabled}
                 minRows={1}
                 style={{
@@ -46,7 +47,7 @@ const ChatInputArea = ({ value, ref, disabled, onSend, onChange }: ChatInputArea
                     outline: 'none',
                     resize: 'none',
                     fontSize: '0.875rem',
-                    maxHeight: '150px',
+                    // height: '150px',
                     overflowY: 'auto',
                 }}
             />
@@ -74,6 +75,7 @@ const ChatInputArea = ({ value, ref, disabled, onSend, onChange }: ChatInputArea
                     <path d="M4.159 4.159L16.84 10l-12.68 5.841V4.159z" />
                 </svg>
             </IconButton>
+
         </Card>
 
     )

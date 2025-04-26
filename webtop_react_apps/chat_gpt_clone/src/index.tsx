@@ -1,30 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import OllamaChat from './pages/OllamaChat';
 import reportWebVitals from './reportWebVitals';
-
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { RouterProvider, createBrowserRouter } from 'react-router';
+import App from './App';
+import Layout from './layouts/Layout';
+import Dashboard from './pages/Dashboard';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
+const router = createBrowserRouter([
+  {
+    Component: App,
+    children: [
+      {
+        path: '/chat_gpt_clone',
+        Component: Layout,
+        children: [
+          {
+            index: true,
+            Component: OllamaChat,
+          },
+          {
+            path: '/chat_gpt_clone/dashboard',
+            Component: Dashboard,
+          },
+        ],
+      },
+    ],
   },
-});
+]);
+
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
