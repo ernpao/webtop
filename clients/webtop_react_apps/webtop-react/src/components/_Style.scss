@@ -1,0 +1,11 @@
+html {
+    font-size: unset !important;
+
+    body {
+        font-size: unset !important;
+
+        *:focus-visible {
+            outline: none;
+        }
+    }
+}

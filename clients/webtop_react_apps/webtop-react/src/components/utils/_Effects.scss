@@ -1,0 +1,49 @@
+$transition-duration: 0.2s;
+
+@mixin effect-base {
+    transition-duration: $transition-duration;
+}
+
+.scale-on-hover,
+.scale-on-hover-lg {
+    @include effect-base;
+    cursor: pointer;
+}
+
+
+// .scale-on-hover.active,
+.scale-on-hover:hover {
+    transform: scale(1.03);
+}
+
+// .scale-on-hover-lg.active,
+.scale-on-hover-lg:hover {
+    transform: scale(1.12);
+}
+
+.underline-on-hover {
+    @include effect-base;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        display: block;
+        transition-duration: $transition-duration;
+        content: '';
+        width: 0%;
+        height: 2px;
+        border-radius: 4px;
+        background-color: white;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.underline-on-hover.active,
+.underline-on-hover:hover {
+
+    &::after {
+        width: 100%;
+    }
+}

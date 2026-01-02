@@ -1,0 +1,18 @@
+{
+    "liveSassCompile.settings.formats": [
+        {
+            "format": "compressed",
+            "extensionName": ".min.css",
+            "savePath": "/src/css",
+        }
+    ],
+    "liveSassCompile.settings.forceBaseDirectory": "/src/components",
+    "liveSassCompile.settings.watchOnLaunch": true,
+    "editor.formatOnSave": true,
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+    },
+    "typescript.tsserver.maxTsServerMemory": 8192
+}

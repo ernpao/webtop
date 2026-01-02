@@ -1,0 +1,12 @@
+@use 'utils/Effects';
+
+.sauron-notification-email-graph {
+    circle.MuiMarkElement-root {
+        @include Effects.effect-base;
+        opacity: 0;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

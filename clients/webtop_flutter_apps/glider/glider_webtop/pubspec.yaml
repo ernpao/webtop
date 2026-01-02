@@ -1,0 +1,23 @@
+name: glider_webtop
+description: Webtop library built with Glider.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.15.0-268.18.beta <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  glider:
+    path: ../glider
+  hover:
+    path: ../hover
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true

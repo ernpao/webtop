@@ -1,0 +1,47 @@
+// @font-face {
+//     font-family: 'ZalandoSans';
+//     // src: url('/public/fonts/ZalandoSansSemiExpanded-ExtraLight.ttf') format('truetype');
+//     src: url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap');
+//     font-weight: 100;
+//     font-style: normal;
+//     font-display: swap;
+// }
+
+// @font-face {
+//     font-family: 'Quicksand';
+//     // src: url('/public/fonts/Quicksand-Regular.ttf') format('truetype');
+//     src: url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap') format('truetype');
+//     // font-weight: 100;
+//     font-style: normal;
+//     font-display: swap;
+// }
+
+// @mixin ZalandoSans {
+//     font-family: 'ZalandoSans', sans-serif;
+// }
+
+
+@mixin Quicksand {
+    font-family: 'Quicksand', sans-serif;
+}
+
+@mixin Uppercase {
+    // font-size: 1rem;
+    font-weight: 100;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.text-quicksand {
+    @include Quicksand;
+}
+
+
+// .text-zalando-sans {
+//     @include ZalandoSans;
+// }
+
+.text-uppercase {
+    // @include Quicksand;
+    @include Uppercase;
+}

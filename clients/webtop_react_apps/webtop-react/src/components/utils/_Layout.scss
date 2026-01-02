@@ -1,0 +1,22 @@
+@mixin transform-vertical-center {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@mixin transform-horizontal-center {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@mixin transform-center {
+    @include transform-vertical-center;
+    @include transform-horizontal-center;
+}
+
+body {
+    .custom-screen {
+        padding: 0;
+    }
+}

@@ -1,0 +1,16 @@
+@media (max-width:768px) {
+    body {
+        .custom-two-halves {
+            flex-direction: column;
+
+            &.reversed {
+                flex-direction: column-reverse;
+            }
+
+            .left,
+            .right {
+                width: 100%;
+            }
+        }
+    }
+}
